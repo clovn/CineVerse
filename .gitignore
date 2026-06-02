@@ -1,0 +1,35 @@
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+local.properties
+.navigation/
+
+# Gradle
+.gradle/
+build/
+**/build/
+.configuration-cache/
+
+# Kotlin Multiplatform / Native
+.kotlin/
+.konan/
+
+# OS / System
+.DS_Store
+Thumbs.db
+*.swp
+
+# Xcode / Apple (Excluding generated files as XcodeGen manages project generation)
+iosApp.xcodeproj/
+DerivedData/
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+*.xcworkspace
+!default.xcworkspace
+xcshareddata/
+!default.xcshareddata
+*.xcuserstate

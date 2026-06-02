@@ -1,0 +1,75 @@
+CREATE TABLE WatchlistMovie (
+    id INTEGER NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    posterPath TEXT,
+    releaseDate TEXT,
+    voteAverage REAL NOT NULL,
+    isFavorite INTEGER NOT NULL DEFAULT 0,
+    isWatchLater INTEGER NOT NULL DEFAULT 0
+);
+
+-- Watchlist Queries
+insertOrReplaceMovie:
+INSERT OR REPLACE INTO WatchlistMovie(id, title, posterPath, releaseDate, voteAverage, isFavorite, isWatchLater)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+getMovieById:
+SELECT * FROM WatchlistMovie WHERE id = ?;
+
+getFavoriteMovies:
+SELECT * FROM WatchlistMovie WHERE isFavorite = 1;
+
+getWatchLaterMovies:
+SELECT * FROM WatchlistMovie WHERE isWatchLater = 1;
+
+removeMovie:
+DELETE FROM WatchlistMovie WHERE id = ?;
+
+deleteWatchlist:
+DELETE FROM WatchlistMovie;
+
+
+-- Simulated User Profile Table
+CREATE TABLE UserProfile (
+    username TEXT NOT NULL PRIMARY KEY,
+    password TEXT NOT NULL
+);
+
+insertUser:
+INSERT OR REPLACE INTO UserProfile(username, password)
+VALUES (?, ?);
+
+getUser:
+SELECT * FROM UserProfile WHERE username = ?;
+
+
+-- Simulated Active Session Table
+CREATE TABLE ActiveSession (
+    id INTEGER NOT NULL PRIMARY KEY DEFAULT 1,
+    currentUsername TEXT
+);
+
+insertSession:
+INSERT OR REPLACE INTO ActiveSession(id, currentUsername)
+VALUES (1, ?);
+
+getSession:
+SELECT * FROM ActiveSession WHERE id = 1;
+
+clearSession:
+UPDATE ActiveSession SET currentUsername = NULL WHERE id = 1;
+
+
+-- App Settings Table
+CREATE TABLE AppSettings (
+    id INTEGER NOT NULL PRIMARY KEY DEFAULT 1,
+    isOnboardingCompleted INTEGER NOT NULL DEFAULT 0
+);
+
+getSettings:
+SELECT * FROM AppSettings WHERE id = 1;
+
+insertSettings:
+INSERT OR REPLACE INTO AppSettings(id, isOnboardingCompleted)
+VALUES (1, ?);
+

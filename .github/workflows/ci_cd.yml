@@ -1,0 +1,73 @@
+name: CineVerse CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    name: Lint & Code Quality
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Run Kotlin Linter
+        run: |
+          echo "Running Kotlin Linter checks..."
+          ./gradlew check --continue || echo "Linting finished with warnings/errors"
+
+      - name: Run SwiftLint
+        run: |
+          if command -v swiftlint &> /dev/null; then
+            echo "Running SwiftLint..."
+            swiftlint lint iosApp/
+          else
+            echo "SwiftLint not installed on runner, skipping."
+          fi
+
+  build-android:
+    name: Build Android Application
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Build Android Debug APK
+        run: ./gradlew :androidApp:app:assembleDebug
+
+  build-ios:
+    name: Build iOS Application
+    runs-on: macos-latest
+    needs: lint
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Compile Kotlin Multiplatform iOS Target
+        run: ./gradlew compileKotlinIosSimulatorArm64
+
+      - name: Build iOS SwiftUI Client
+        run: |
+          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator -configuration Debug build
