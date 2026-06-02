@@ -19,7 +19,7 @@ expect class HttpClientEngineFactory {
 
 fun createHttpClient(
     engineFactory: HttpClientEngineFactory,
-    apiKey: String = "MOCK_TMDB_API_KEY"
+    apiKey: String = TmdbConfig.API_KEY
 ): HttpClient {
     return HttpClient(engineFactory.createEngine()) {
         install(ContentNegotiation) {
