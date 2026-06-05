@@ -5,11 +5,12 @@ on:
     branches: [ master, develop ]
   pull_request:
     branches: [ master, develop ]
+  workflow_dispatch: # Allows manual run trigger
 
 jobs:
-  lint:
-    name: Lint & Code Quality
-    runs-on: macos-latest
+  lint-kotlin:
+    name: Lint & Code Quality (Kotlin)
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -19,11 +20,72 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
+          cache: 'gradle'
 
       - name: Run Kotlin Linter
         run: |
           echo "Running Kotlin Linter checks..."
           ./gradlew check --continue || echo "Linting finished with warnings/errors"
+
+  build-android:
+    name: Build & Distribute Android
+    runs-on: ubuntu-latest
+    needs: lint-kotlin
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Build Android Debug APK
+        run: ./gradlew :androidApp:app:assembleDebug
+
+      # Upload APK to Github Artifacts
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CineVerse-Android-Debug
+          path: androidApp/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7
+
+      # Upload to Firebase App Distribution (Only on master branch)
+      # requires secrets.FIREBASE_ANDROID_APP_ID and secrets.FIREBASE_SERVICE_ACCOUNT_JSON
+      - name: Upload to Firebase App Distribution
+        if: github.ref == 'refs/heads/master' && hashFiles('**/google-services.json') != ''
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          groups: testers
+          file: androidApp/app/build/outputs/apk/debug/app-debug.apk
+
+  build-ios:
+    name: Build & Distribute iOS
+    runs-on: macos-latest
+    needs: lint-kotlin
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Cache Kotlin Native Compiler (~/.konan)
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-konan-
 
       - name: Run SwiftLint
         run: |
@@ -34,40 +96,36 @@ jobs:
             echo "SwiftLint not installed on runner, skipping."
           fi
 
-  build-android:
-    name: Build Android Application
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      - name: Build Android Debug APK
-        run: ./gradlew :androidApp:app:assembleDebug
-
-  build-ios:
-    name: Build iOS Application
-    runs-on: macos-latest
-    needs: lint
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
       - name: Compile Kotlin Multiplatform iOS Target
         run: ./gradlew compileKotlinIosSimulatorArm64
 
-      - name: Build iOS SwiftUI Client
+      - name: Build iOS SwiftUI Client (Simulator)
         run: |
           xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator -configuration Debug build
+
+      # Template for Firebase App Distribution on iOS:
+      # To run this, you need to store Apple distribution certs/provisioning profile
+      # and configure exportOptions.plist in iosApp/ folder.
+      #
+      # - name: Install Apple Certificate & Provisioning Profile
+      #   if: github.ref == 'refs/heads/master' && hashFiles('**/GoogleService-Info.plist') != ''
+      #   uses: apple-actions/import-codesign-certs@v3
+      #   with:
+      #     p12-file-base64: ${{ secrets.APPLE_P12_CERTIFICATE_BASE64 }}
+      #     p12-password: ${{ secrets.APPLE_P12_PASSWORD }}
+      #     keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
+      #
+      # - name: Build & Archive iOS App (.ipa)
+      #   if: github.ref == 'refs/heads/master' && hashFiles('**/GoogleService-Info.plist') != ''
+      #   run: |
+      #     xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphoneos -configuration Release -archivePath CineVerse.xcarchive archive
+      #     xcodebuild -exportArchive -archivePath CineVerse.xcarchive -exportOptionsPlist iosApp/exportOptions.plist -exportPath build/ios
+      #
+      # - name: Upload to Firebase App Distribution
+      #   if: github.ref == 'refs/heads/master' && hashFiles('**/GoogleService-Info.plist') != ''
+      #   uses: wzieba/Firebase-Distribution-Github-Action@v1
+      #   with:
+      #     appId: ${{ secrets.FIREBASE_IOS_APP_ID }}
+      #     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+      #     groups: testers
+      #     file: build/ios/CineVerse.ipa
