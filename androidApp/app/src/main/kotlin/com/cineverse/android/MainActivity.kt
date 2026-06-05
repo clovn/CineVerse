@@ -51,10 +51,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CineVerseTheme {
-                val mainViewModel: MainViewModel = koinInject()
-                val mainState by mainViewModel.state.collectAsState()
+            val mainViewModel: MainViewModel = koinInject()
+            val mainState by mainViewModel.state.collectAsState()
 
+            CineVerseTheme(darkTheme = mainState.isDarkTheme) {
                 if (mainState.isLoading) {
                     Box(
                         modifier = Modifier.fillMaxSize(),

@@ -20,6 +20,7 @@
 		6E0FEBD0873105EF3F15340C /* ProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538EEB48A1C15F4C32C920B0 /* ProfileScreen.swift */; };
 		859A19F944ABC59C57854F64 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ADF0AB31543C2058EC515C /* HomeScreen.swift */; };
 		892580ABF7AECDD004C42E8C /* WatchlistScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248E6AF547758B2EF35A1868 /* WatchlistScreen.swift */; };
+		C87B4FA04BDA1DA04158D48E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A55143988C4C8F291BE72E9A /* GoogleService-Info.plist */; };
 		DE64C3B2EF6EC800D5541CC9 /* OnboardingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7900B6AD51ED34BE6459B683 /* OnboardingScreen.swift */; };
 		F5C2437B1FF5AA622EAB2A16 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85CB771087A6CFEC3E74DEEF /* DesignSystem.swift */; };
 /* End PBXBuildFile section */
@@ -36,6 +37,7 @@
 		85CB771087A6CFEC3E74DEEF /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		86038AE1032E284E79B32AD6 /* iosApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3ADF0AB31543C2058EC515C /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
+		A55143988C4C8F291BE72E9A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CE8509E5A49E4A5CAAEB3ADB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E03F5100AD2B78FCE7442E4B /* DetailsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsScreen.swift; sourceTree = "<group>"; };
 		F234D1CF41B5AE401E574057 /* KoinHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoinHelper.swift; sourceTree = "<group>"; };
@@ -58,6 +60,7 @@
 			isa = PBXGroup;
 			children = (
 				CE8509E5A49E4A5CAAEB3ADB /* ContentView.swift */,
+				A55143988C4C8F291BE72E9A /* GoogleService-Info.plist */,
 				668CECA83ACC03A83C85A623 /* iOSApp.swift */,
 				23B83212CE5084AC170B112F /* IOSFirebaseAnalyticsTracker.swift */,
 				F234D1CF41B5AE401E574057 /* KoinHelper.swift */,
@@ -115,6 +118,7 @@
 			buildPhases = (
 				6FE3644042B5DCD5E33FA1FC /* Compile Kotlin Multiplatform Framework */,
 				297B59D9CE634556D6007C40 /* Sources */,
+				1623B02D10928C8101C1F806 /* Resources */,
 				EF8A6E9BFD470986D9D5C9B5 /* Frameworks */,
 			);
 			buildRules = (
@@ -162,6 +166,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1623B02D10928C8101C1F806 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C87B4FA04BDA1DA04158D48E /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		6FE3644042B5DCD5E33FA1FC /* Compile Kotlin Multiplatform Framework */ = {

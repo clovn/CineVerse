@@ -2,6 +2,7 @@ package com.cineverse.presentation.main
 
 import com.cineverse.domain.repository.UserRepository
 import com.cineverse.presentation.base.BaseMviViewModel
+import com.cineverse.core.analytics.ThemeSettings
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -9,7 +10,8 @@ import kotlinx.coroutines.launch
 data class MainState(
     val isOnboardingCompleted: Boolean = false,
     val isAuthorized: Boolean = false,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val isDarkTheme: Boolean = true
 )
 
 sealed class MainIntent {
@@ -28,12 +30,14 @@ class MainViewModel(
         viewModelScope.launch {
             combine(
                 userRepository.isOnboardingCompleted(),
-                userRepository.getActiveSession()
-            ) { onboardingCompleted, session ->
+                userRepository.getActiveSession(),
+                ThemeSettings.isDarkThemeFlow
+            ) { onboardingCompleted, session, darkTheme ->
                 MainState(
                     isOnboardingCompleted = onboardingCompleted,
                     isAuthorized = session != null,
-                    isLoading = false
+                    isLoading = false,
+                    isDarkTheme = darkTheme
                 )
             }.collectLatest { newState ->
                 updateState { newState }

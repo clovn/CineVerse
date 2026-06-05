@@ -83,7 +83,7 @@ struct ContentView: View {
                 }
             }
         }
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(mainState.isDarkTheme ? .dark : .light)
         .task {
             for await currentState in mainViewModel.state {
                 if let currentState = currentState {

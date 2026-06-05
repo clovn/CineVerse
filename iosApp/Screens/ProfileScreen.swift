@@ -87,6 +87,23 @@ struct ProfileScreen: View {
                 }
                 .padding(.horizontal)
             }
+
+            HStack {
+                Text("Dark Theme")
+                    .font(AppTypography.bodyMedium)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+                Spacer()
+                Toggle("", isOn: Binding<Bool>(
+                    get: { ThemeSettings.shared.isDarkTheme() },
+                    set: { ThemeSettings.shared.setDarkTheme(enabled: $0) }
+                ))
+                .labelsHidden()
+            }
+            .padding()
+            .background(AppColors.darkSurface)
+            .cornerRadius(16)
+            .padding(.horizontal)
             
             Spacer()
             

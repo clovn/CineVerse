@@ -42,6 +42,7 @@ import com.cineverse.core.designsystem.components.CineVerseTextField
 import com.cineverse.presentation.profile.ProfileEffect
 import com.cineverse.presentation.profile.ProfileIntent
 import com.cineverse.presentation.profile.ProfileViewModel
+import com.cineverse.core.analytics.ThemeSettings
 import org.koin.compose.koinInject
 
 @Composable
@@ -159,6 +160,35 @@ fun ProfileScreen(
                                 )
                             }
                         }
+                    }
+                }
+
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Dark Theme",
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        val isDarkTheme by ThemeSettings.isDarkThemeFlow.collectAsState()
+                        androidx.compose.material3.Switch(
+                            checked = isDarkTheme,
+                            onCheckedChange = { ThemeSettings.setDarkTheme(it) },
+                            colors = androidx.compose.material3.SwitchDefaults.colors(
+                                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                                checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                            )
+                        )
                     }
                 }
 
