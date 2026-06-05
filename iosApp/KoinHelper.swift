@@ -6,7 +6,7 @@ class KoinHelperSwift {
     private var koinHelper: KoinHelper?
     
     func start() {
-        // doInitKoin() is the Kotlin/Native export name for initKoin()
+        
         let _ = KoinKt.doInitKoin()
         koinHelper = KoinHelper()
     }

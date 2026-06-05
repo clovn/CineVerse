@@ -56,19 +56,19 @@ fun OnboardingScreen(
             title = "Welcome to CineVerse",
             description = "Discover your next favorite movie, track releases, and build your ultimate watchlist in one clean application.",
             icon = Icons.Default.PlayArrow,
-            iconColor = Color(0xFFE11D48) // Rose
+            iconColor = Color(0xFFE11D48) 
         ),
         OnboardingPage(
             title = "Dynamic Movie Roll",
             description = "Can't decide what to watch? Roll the interactive 3D dice to randomly select a top-rated movie from our database.",
             icon = Icons.Default.Favorite,
-            iconColor = Color(0xFF3B82F6) // Blue
+            iconColor = Color(0xFF3B82F6) 
         ),
         OnboardingPage(
             title = "Smart Watchlist Reminders",
             description = "Add movie releases to your watchlist and schedule custom notifications so you never miss a premiere.",
             icon = Icons.Default.Notifications,
-            iconColor = Color(0xFF10B981) // Green
+            iconColor = Color(0xFF10B981) 
         )
     )
 
@@ -78,11 +78,11 @@ fun OnboardingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF0F172A)) // Slate Background
+            .background(Color(0xFF0F172A)) 
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Skip Button
+        
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
@@ -145,7 +145,7 @@ fun OnboardingScreen(
 
                 Text(
                     text = page.description,
-                    color = Color(0xFF94A3B8), // Text Secondary Slate
+                    color = Color(0xFF94A3B8), 
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
                     lineHeight = 24.sp
@@ -153,12 +153,11 @@ fun OnboardingScreen(
             }
         }
 
-        // Indicators & Buttons
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Page Indicator Dots
+            
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(bottom = 32.dp)
@@ -176,7 +175,6 @@ fun OnboardingScreen(
                 }
             }
 
-            // Action Button
             val isLastPage = pagerState.currentPage == pages.size - 1
             CineVerseButton(
                 text = if (isLastPage) "Get Started" else "Next",

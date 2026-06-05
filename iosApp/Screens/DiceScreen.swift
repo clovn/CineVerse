@@ -25,8 +25,7 @@ struct DiceScreen: View {
                 }
                 
                 Spacer()
-                
-                // Animated 3D rotating Dice
+
                 ZStack {
                     RoundedRectangle(cornerRadius: 24)
                         .fill(AppColors.primary)
@@ -46,8 +45,7 @@ struct DiceScreen: View {
                 }
                 
                 Spacer()
-                
-                // Bottom results box
+
                 BoxResultsView()
                 
                 Spacer()
@@ -90,15 +88,15 @@ struct DiceScreen: View {
             let h = geo.size.height
             
             ZStack {
-                // Center
+                
                 Circle().fill(Color.white).frame(width: r * 2).position(x: w / 2, y: h / 2)
-                // Top-Left
+                
                 Circle().fill(Color.white).frame(width: r * 2).position(x: w / 4, y: h / 4)
-                // Bottom-Right
+                
                 Circle().fill(Color.white).frame(width: r * 2).position(x: w * 3 / 4, y: h * 3 / 4)
-                // Top-Right
+                
                 Circle().fill(Color.white).frame(width: r * 2).position(x: w * 3 / 4, y: h / 4)
-                // Bottom-Left
+                
                 Circle().fill(Color.white).frame(width: r * 2).position(x: w / 4, y: h * 3 / 4)
             }
         }
@@ -118,8 +116,7 @@ struct DiceScreen: View {
                         .font(AppTypography.labelSmall)
                         .fontWeight(.bold)
                         .foregroundColor(AppColors.primary)
-                    
-                    // Simple scaled MovieCard presentation
+
                     MovieCard(imageUrl: movie.posterPath) {
                         onNavigateToDetails(movie.id)
                     }
@@ -135,9 +132,9 @@ struct DiceScreen: View {
                         .foregroundColor(.gray)
                 }
                 .padding()
-                .background(Color(uiColor: .secondarySystemBackground))
+                .background(AppColors.darkSurface)
                 .cornerRadius(16)
-                .shadow(radius: 5)
+                .shadow(color: Color.black.opacity(0.3), radius: 5)
                 .transition(.asymmetric(insertion: .scale.combined(with: .opacity), removal: .opacity))
             } else {
                 Spacer().frame(height: 200)

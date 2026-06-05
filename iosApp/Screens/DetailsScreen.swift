@@ -16,7 +16,7 @@ struct DetailsScreen: View {
     
     var body: some View {
         ZStack {
-            Color(uiColor: .systemBackground).edgesIgnoringSafeArea(.all)
+            AppColors.darkBackground.edgesIgnoringSafeArea(.all)
             
             if state.isLoading && state.movieDetails == nil {
                 ProgressView()
@@ -57,14 +57,13 @@ struct DetailsScreen: View {
         }
         .task {
             viewModel.sendIntent(intent: DetailsIntent.LoadDetails(id: movieId))
-            
-            // Collect State Flow
+
             for await currentState in viewModel.state {
                 if let currentState = currentState { self.state = currentState }
             }
         }
         .task {
-            // Collect Effects
+            
             for await currentEffect in viewModel.effect {
                 switch currentEffect {
                 case let messageEffect as DetailsEffect.ShowMessage:
@@ -93,35 +92,72 @@ struct DetailsScreen: View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    
-                    // Backdrop header
+
                     ZStack(alignment: .bottom) {
-                        if let path = details.backdropPath ?? details.posterPath, let url = URL(string: path) {
-                            AsyncImage(url: url) { image in
-                                image.resizable().aspectRatio(contentMode: .fill)
-                            } placeholder: {
-                                ProgressView()
+                        GeometryReader { geo in
+                            if let path = details.backdropPath ?? details.posterPath, let url = URL(string: path) {
+                                AsyncImage(url: url) { phase in
+                                    switch phase {
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: geo.size.width, height: geo.size.height)
+                                    case .failure(_):
+                                        ImageFallbackView(systemIconName: "photo")
+                                            .frame(width: geo.size.width, height: geo.size.height)
+                                    case .empty:
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: AppColors.primary))
+                                            .frame(width: geo.size.width, height: geo.size.height)
+                                    @unknown default:
+                                        ImageFallbackView(systemIconName: "photo")
+                                            .frame(width: geo.size.width, height: geo.size.height)
+                                    }
+                                }
+                            } else {
+                                ImageFallbackView(systemIconName: "photo")
+                                    .frame(width: geo.size.width, height: geo.size.height)
                             }
                         }
                         
                         LinearGradient(
-                            gradient: Gradient(colors: [.clear, Color(uiColor: .systemBackground)]),
+                            gradient: Gradient(colors: [.clear, AppColors.darkBackground]),
                             startPoint: .top,
                             endPoint: .bottom
                         )
                     }
                     .frame(height: 280)
                     .clipped()
-                    
-                    // Poster & Description info
+
                     HStack(alignment: .bottom, spacing: 16) {
                         ZStack {
                             if let path = details.posterPath, let url = URL(string: path) {
-                                AsyncImage(url: url) { image in
-                                    image.resizable().aspectRatio(contentMode: .fill)
-                                } placeholder: {
-                                    ProgressView()
+                                AsyncImage(url: url) { phase in
+                                    switch phase {
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                            .frame(width: 110, height: 165)
+                                            .clipped()
+                                    case .failure(_):
+                                        ImageFallbackView(systemIconName: "film")
+                                            .frame(width: 110, height: 165)
+                                    case .empty:
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: AppColors.primary))
+                                            .frame(width: 110, height: 165)
+                                    @unknown default:
+                                        ImageFallbackView(systemIconName: "film")
+                                            .frame(width: 110, height: 165)
+                                    }
                                 }
+                                .frame(width: 110, height: 165)
+                                .clipped()
+                            } else {
+                                ImageFallbackView(systemIconName: "film")
+                                    .frame(width: 110, height: 165)
                             }
                         }
                         .frame(width: 110, height: 165)
@@ -147,37 +183,36 @@ struct DetailsScreen: View {
                     }
                     .padding(.horizontal)
                     .padding(.top, -40)
-                    
-                    // Genre chips list
+
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
                             ForEach(details.genres, id: \.id) { genre in
                                 Text(genre.name)
                                     .font(AppTypography.labelSmall)
+                                    .foregroundColor(AppColors.darkTextPrimary)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 6)
-                                    .background(Color.gray.opacity(0.1))
+                                    .background(AppColors.darkSurface)
                                     .cornerRadius(8)
                             }
                         }
                         .padding(.horizontal)
                         .padding(.vertical, 12)
                     }
-                    
-                    // Synopsis text
+
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Synopsis")
                             .font(AppTypography.headingLarge)
                             .fontWeight(.bold)
+                            .foregroundColor(AppColors.darkTextPrimary)
                         
                         Text(details.overview)
                             .font(AppTypography.bodyMedium)
-                            .foregroundColor(.gray)
+                            .foregroundColor(AppColors.darkTextSecondary)
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 8)
-                    
-                    // Cast list scroller
+
                     if !state.cast.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Top Cast")
@@ -191,11 +226,31 @@ struct DetailsScreen: View {
                                         VStack(alignment: .center, spacing: 4) {
                                             ZStack {
                                                 if let path = actor.profilePath, let url = URL(string: path) {
-                                                    AsyncImage(url: url) { image in
-                                                        image.resizable().aspectRatio(contentMode: .fill)
-                                                    } placeholder: {
-                                                        ProgressView()
+                                                    AsyncImage(url: url) { phase in
+                                                        switch phase {
+                                                        case .success(let image):
+                                                            image
+                                                                .resizable()
+                                                                .aspectRatio(contentMode: .fill)
+                                                                .frame(width: 56, height: 56)
+                                                                .clipped()
+                                                        case .failure(_):
+                                                            ImageFallbackView(systemIconName: "person.fill")
+                                                                .frame(width: 56, height: 56)
+                                                        case .empty:
+                                                            ProgressView()
+                                                                .progressViewStyle(CircularProgressViewStyle(tint: AppColors.primary))
+                                                                .frame(width: 56, height: 56)
+                                                        @unknown default:
+                                                            ImageFallbackView(systemIconName: "person.fill")
+                                                                .frame(width: 56, height: 56)
+                                                        }
                                                     }
+                                                    .frame(width: 56, height: 56)
+                                                    .clipped()
+                                                } else {
+                                                    ImageFallbackView(systemIconName: "person.fill")
+                                                        .frame(width: 56, height: 56)
                                                 }
                                             }
                                             .frame(width: 56, height: 56)
@@ -220,12 +275,11 @@ struct DetailsScreen: View {
                         .padding(.vertical, 8)
                     }
                     
-                    Spacer().frame(height: 100) // Bottom spacing
+                    Spacer().frame(height: 100) 
                 }
             }
             .edgesIgnoringSafeArea(.top)
-            
-            // Header buttons
+
             VStack {
                 HStack {
                     Button(action: onNavigateBack) {
@@ -259,14 +313,13 @@ struct DetailsScreen: View {
                 .padding()
                 Spacer()
             }
-            
-            // Floating sticky Watch Later button
+
             CineVerseButton(
                 text: state.isWatchLater ? "Remove from Watch Later" : "Add to Watch Later",
                 onClick: { viewModel.sendIntent(intent: DetailsIntent.ToggleWatchLater()) }
             )
             .padding()
-            .background(LinearGradient(gradient: Gradient(colors: [.clear, Color(uiColor: .systemBackground)]), startPoint: .top, endPoint: .bottom))
+            .background(LinearGradient(gradient: Gradient(colors: [.clear, AppColors.darkBackground]), startPoint: .top, endPoint: .bottom))
         }
     }
     

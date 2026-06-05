@@ -11,7 +11,7 @@ struct ProfileScreen: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(uiColor: .systemBackground).edgesIgnoringSafeArea(.all)
+                AppColors.darkBackground.edgesIgnoringSafeArea(.all)
                 ProfileDetailsLayout()
             }
             .navigationTitle("My Profile")
@@ -29,8 +29,7 @@ struct ProfileScreen: View {
     private func ProfileDetailsLayout() -> some View {
         VStack(spacing: 24) {
             Spacer().frame(height: 10)
-            
-            // Circular profile badge
+
             ZStack {
                 Circle()
                     .fill(AppColors.primary.opacity(0.1))
@@ -52,11 +51,10 @@ struct ProfileScreen: View {
                         .foregroundColor(AppColors.primary)
                 }
             }
-            
-            // Profile stats grids
+
             if let stats = state.stats {
                 HStack(spacing: 16) {
-                    // Movies watched card
+                    
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Movies Watched")
                             .font(AppTypography.labelSmall)
@@ -68,10 +66,9 @@ struct ProfileScreen: View {
                     }
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(uiColor: .secondarySystemBackground))
+                    .background(AppColors.darkSurface)
                     .cornerRadius(16)
-                    
-                    // Fav Genres card
+
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Favorite Genres")
                             .font(AppTypography.labelSmall)
@@ -85,7 +82,7 @@ struct ProfileScreen: View {
                     }
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(uiColor: .secondarySystemBackground))
+                    .background(AppColors.darkSurface)
                     .cornerRadius(16)
                 }
                 .padding(.horizontal)

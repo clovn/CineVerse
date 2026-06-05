@@ -57,10 +57,7 @@ class MovieRepositoryImpl(
             }.body()
             val results = response.results.map { it.toDomain() }
             if (genreId != null) {
-                // TMDB search endpoint doesn't support filter-by-genre natively in standard search parameter,
-                // so we can filter results programmatically in the repository!
-                // To do that, details endpoint is needed per movie, or we fetch the list.
-                // Programmatic filtering here or returning.
+
                 results
             } else {
                 results
@@ -82,7 +79,7 @@ class MovieRepositoryImpl(
                 id = fallback.id,
                 title = fallback.title,
                 posterPath = fallback.posterPath,
-                backdropPath = fallback.posterPath, // Reuse poster as backdrop placeholder
+                backdropPath = fallback.posterPath, 
                 releaseDate = fallback.releaseDate,
                 voteAverage = fallback.voteAverage,
                 overview = "This is a detailed cinematic synopsis for '${fallback.title}'. Immersive storytelling with stellar performances, showcasing stunning visuals and breathtaking audio production in high definition.",
@@ -184,11 +181,11 @@ class MovieRepositoryImpl(
     }
 
     private fun fallbackMovies(): List<Movie> = listOf(
-        Movie(1, "Dune: Part Two", "https://image.tmdb.org/t/p/w500/1pdfxBEPnm48asbk4j645rj4Rlw.jpg", "2024-02-27", 8.3),
-        Movie(2, "Oppenheimer", "https://image.tmdb.org/t/p/w500/8Gxv2Z7HqD619o5uiTEYGIvgo1H.jpg", "2023-07-19", 8.1),
-        Movie(3, "Spider-Man: Across the Spider-Verse", "https://image.tmdb.org/t/p/w500/8VtB7vJD211pf3H3S4tLI6HuuSy.jpg", "2023-05-31", 8.4),
-        Movie(4, "Interstellar", "https://image.tmdb.org/t/p/w500/gEU2QvH353eRP7N1v5h7N1v5h7.jpg", "2014-11-05", 8.6),
-        Movie(5, "Inception", "https://image.tmdb.org/t/p/w500/9gk7adHYeCjFu67br6hnVNAzZqq.jpg", "2010-07-15", 8.3),
-        Movie(6, "The Dark Knight", "https://image.tmdb.org/t/p/w500/qJ2tWw3nqIMebHZ1nPyFFVrk7fg.jpg", "2008-07-16", 8.5)
+        Movie(693134, "Dune: Part Two", "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg", "2024-02-27", 8.3),
+        Movie(872585, "Oppenheimer", "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg", "2023-07-19", 8.1),
+        Movie(569094, "Spider-Man: Across the Spider-Verse", "https://image.tmdb.org/t/p/w500/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg", "2023-05-31", 8.4),
+        Movie(157336, "Interstellar", "https://image.tmdb.org/t/p/w500/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg", "2014-11-05", 8.6),
+        Movie(27205, "Inception", "https://image.tmdb.org/t/p/w500/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg", "2010-07-15", 8.3),
+        Movie(155, "The Dark Knight", "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg", "2008-07-16", 8.5)
     )
 }

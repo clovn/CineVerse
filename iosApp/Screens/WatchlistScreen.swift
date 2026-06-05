@@ -13,7 +13,7 @@ struct WatchlistScreen: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Tab Selection Picker
+                
                 Picker("", selection: Binding(
                     get: { state.selectedTab },
                     set: { viewModel.sendIntent(intent: WatchlistIntent.ChangeTab(tab: $0)) }
@@ -42,15 +42,35 @@ struct WatchlistScreen: View {
                             ForEach(listToDisplay, id: \.id) { movie in
                                 Button(action: { onNavigateToDetails(movie.id) }) {
                                     HStack(spacing: 12) {
-                                        ZStack {
-                                            if let path = movie.posterPath, let url = URL(string: path) {
-                                                AsyncImage(url: url) { image in
-                                                    image.resizable().aspectRatio(contentMode: .fill)
-                                                } placeholder: {
-                                                    ProgressView()
-                                                }
-                                            }
-                                        }
+                                         ZStack {
+                                             if let path = movie.posterPath, let url = URL(string: path) {
+                                                 AsyncImage(url: url) { phase in
+                                                     switch phase {
+                                                     case .success(let image):
+                                                         image
+                                                             .resizable()
+                                                             .aspectRatio(contentMode: .fill)
+                                                             .frame(width: 50, height: 75)
+                                                             .clipped()
+                                                     case .failure(_):
+                                                         ImageFallbackView(systemIconName: "film")
+                                                             .frame(width: 50, height: 75)
+                                                     case .empty:
+                                                         ProgressView()
+                                                             .progressViewStyle(CircularProgressViewStyle(tint: AppColors.primary))
+                                                             .frame(width: 50, height: 75)
+                                                     @unknown default:
+                                                         ImageFallbackView(systemIconName: "film")
+                                                             .frame(width: 50, height: 75)
+                                                     }
+                                                 }
+                                                 .frame(width: 50, height: 75)
+                                                 .clipped()
+                                             } else {
+                                                 ImageFallbackView(systemIconName: "film")
+                                                     .frame(width: 50, height: 75)
+                                             }
+                                         }
                                         .frame(width: 50, height: 75)
                                         .cornerRadius(8)
                                         .clipped()

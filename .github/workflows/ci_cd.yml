@@ -5,7 +5,7 @@ on:
     branches: [ master, develop ]
   pull_request:
     branches: [ master, develop ]
-  workflow_dispatch: # Allows manual run trigger
+  workflow_dispatch:
 
 jobs:
   lint-kotlin:
@@ -102,30 +102,3 @@ jobs:
       - name: Build iOS SwiftUI Client (Simulator)
         run: |
           xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator -configuration Debug build
-
-      # Template for Firebase App Distribution on iOS:
-      # To run this, you need to store Apple distribution certs/provisioning profile
-      # and configure exportOptions.plist in iosApp/ folder.
-      #
-      # - name: Install Apple Certificate & Provisioning Profile
-      #   if: github.ref == 'refs/heads/master' && hashFiles('**/GoogleService-Info.plist') != ''
-      #   uses: apple-actions/import-codesign-certs@v3
-      #   with:
-      #     p12-file-base64: ${{ secrets.APPLE_P12_CERTIFICATE_BASE64 }}
-      #     p12-password: ${{ secrets.APPLE_P12_PASSWORD }}
-      #     keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }}
-      #
-      # - name: Build & Archive iOS App (.ipa)
-      #   if: github.ref == 'refs/heads/master' && hashFiles('**/GoogleService-Info.plist') != ''
-      #   run: |
-      #     xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphoneos -configuration Release -archivePath CineVerse.xcarchive archive
-      #     xcodebuild -exportArchive -archivePath CineVerse.xcarchive -exportOptionsPlist iosApp/exportOptions.plist -exportPath build/ios
-      #
-      # - name: Upload to Firebase App Distribution
-      #   if: github.ref == 'refs/heads/master' && hashFiles('**/GoogleService-Info.plist') != ''
-      #   uses: wzieba/Firebase-Distribution-Github-Action@v1
-      #   with:
-      #     appId: ${{ secrets.FIREBASE_IOS_APP_ID }}
-      #     serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
-      #     groups: testers
-      #     file: build/ios/CineVerse.ipa

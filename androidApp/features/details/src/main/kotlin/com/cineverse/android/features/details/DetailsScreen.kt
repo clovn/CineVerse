@@ -108,14 +108,14 @@ fun DetailsScreen(
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
             ) {
-                // Scrollable content
+                
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(scrollState)
-                        .padding(bottom = 80.dp) // Bottom padding for sticky button
+                        .padding(bottom = 80.dp) 
                 ) {
-                    // Backdrop banner top section
+                    
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -128,8 +128,7 @@ fun DetailsScreen(
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop
                         )
-                        
-                        // Fading bottom-up overlay to blend backdrop with screen background color
+
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -145,7 +144,6 @@ fun DetailsScreen(
                         )
                     }
 
-                    // Poster card overlaps with details text
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -194,7 +192,6 @@ fun DetailsScreen(
                         }
                     }
 
-                    // Horizontal list of Genre chips
                     LazyRow(
                         modifier = Modifier.fillMaxWidth(),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
@@ -212,7 +209,6 @@ fun DetailsScreen(
                         }
                     }
 
-                    // Synopsis section
                     Text(
                         text = "Synopsis",
                         style = MaterialTheme.typography.headlineLarge.copy(fontSize = 18.sp),
@@ -226,7 +222,6 @@ fun DetailsScreen(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
                     )
 
-                    // Cast Section
                     if (state.cast.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
@@ -275,7 +270,6 @@ fun DetailsScreen(
                     }
                 }
 
-                // Sticky floating buttons (Top Bar back, Favorite, Notification trigger)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -342,7 +336,6 @@ fun DetailsScreen(
                     }
                 }
 
-                // Sticky floating PrimaryButton at the bottom ("Add to Watchlist" / "Remove from Watch Later")
                 CineVerseButton(
                     text = if (state.isWatchLater) "Remove from Watch Later" else "Add to Watch Later",
                     onClick = { viewModel.sendIntent(DetailsIntent.ToggleWatchLater) },
@@ -374,7 +367,7 @@ private fun scheduleAlarm(context: Context, movieTitle: String, timeInMillis: Lo
             pendingIntent
         )
     } catch (e: SecurityException) {
-        // Fallback for Android 12+ if target exact alarms permission isn't available
+        
         alarmManager.set(
             AlarmManager.RTC_WAKEUP,
             timeInMillis,

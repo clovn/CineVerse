@@ -10,7 +10,6 @@ import org.koin.dsl.module
 actual val platformModule: Module = module {
     single { DatabaseDriverFactory() }
     single { HttpClientEngineFactory() }
-    
-    // Platform binding of the Analytics tracker (Debug implementation as fallback)
+
     single<AnalyticsTracker> { DebugAnalyticsTracker() }
 }

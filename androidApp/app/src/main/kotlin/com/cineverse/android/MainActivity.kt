@@ -91,7 +91,6 @@ class MainActivity : ComponentActivity() {
                         Triple(Screen.Profile.route, "Profile", Icons.Default.Person)
                     )
 
-                    // Display bottom navigation bar only when on root tabs
                     val showBottomBar = bottomNavItems.any { it.first == currentRoute }
 
                     Scaffold(

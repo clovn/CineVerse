@@ -10,10 +10,6 @@ import com.cineverse.presentation.main.MainViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-/**
- * iOS-friendly Koin accessor that provides properly typed ViewModel getters.
- * Swift can call these without dealing with KotlinKClass or Koin generics.
- */
 class KoinHelper : KoinComponent {
     fun getHomeViewModel(): HomeViewModel = get()
     fun getSearchViewModel(): SearchViewModel = get()

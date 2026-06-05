@@ -40,7 +40,7 @@ class DiceViewModel(
         
         viewModelScope.launch {
             updateState { it.copy(isRolling = true, randomMovie = null) }
-            // Animate for 1.5 seconds (dice rotation / rolling visualization in UI)
+            
             delay(1500)
             try {
                 val movie = movieRepository.getRandomMovie()

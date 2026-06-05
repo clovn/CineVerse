@@ -58,7 +58,6 @@ fun DiceScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
-    // Setup infinite rotation animation when rolling
     val infiniteTransition = rememberInfiniteTransition()
     val rollRotation by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -92,7 +91,6 @@ fun DiceScreen(
             )
         }
 
-        // Animated Dice section
         Box(
             modifier = Modifier
                 .size(200.dp)
@@ -109,21 +107,20 @@ fun DiceScreen(
                 },
             contentAlignment = Alignment.Center
         ) {
-            // Draw a beautiful custom 3D-like red cinema dice with 5 dots
+            
             val primaryColor = MaterialTheme.colorScheme.primary
             val isDark = MaterialTheme.colorScheme.background.red < 0.5f
             val outlineColor = if (isDark) Color.White else Color.Black
 
             Canvas(modifier = Modifier.size(120.dp)) {
-                // Background cube face
+                
                 drawRoundRect(
                     color = primaryColor,
                     topLeft = Offset(0f, 0f),
                     size = Size(size.width, size.height),
                     cornerRadius = CornerRadius(24.dp.toPx(), 24.dp.toPx())
                 )
-                
-                // Border outline
+
                 drawRoundRect(
                     color = outlineColor.copy(alpha = 0.3f),
                     topLeft = Offset(0f, 0f),
@@ -132,25 +129,22 @@ fun DiceScreen(
                     style = Stroke(width = 4.dp.toPx())
                 )
 
-                // 5 Dots representing side five
                 val r = 8.dp.toPx()
                 val w = size.width
                 val h = size.height
-                
-                // Center
+
                 drawCircle(color = Color.White, radius = r, center = Offset(w / 2f, h / 2f))
-                // Top-Left
+                
                 drawCircle(color = Color.White, radius = r, center = Offset(w / 4f, h / 4f))
-                // Bottom-Right
+                
                 drawCircle(color = Color.White, radius = r, center = Offset(w * 3f / 4f, h * 3f / 4f))
-                // Top-Right
+                
                 drawCircle(color = Color.White, radius = r, center = Offset(w * 3f / 4f, h / 4f))
-                // Bottom-Left
+                
                 drawCircle(color = Color.White, radius = r, center = Offset(w / 4f, h * 3f / 4f))
             }
         }
 
-        // Popup recommendation result
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -221,7 +215,6 @@ fun DiceScreen(
             }
         }
 
-        // Trigger roll button
         CineVerseButton(
             text = if (state.isRolling) "Rolling..." else "Roll the Dice",
             onClick = { viewModel.sendIntent(DiceIntent.RollDice) },

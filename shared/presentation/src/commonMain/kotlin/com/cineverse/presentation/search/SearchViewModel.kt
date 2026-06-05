@@ -49,7 +49,7 @@ class SearchViewModel(
         when (intent) {
             is SearchIntent.UpdateQuery -> {
                 updateState { it.copy(query = intent.query) }
-                // Debounce search requests to prevent API rate limiting
+                
                 searchJob?.cancel()
                 searchJob = viewModelScope.launch {
                     delay(300)

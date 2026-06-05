@@ -11,7 +11,7 @@ struct SearchScreen: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Header inputs section
+                
                 VStack(alignment: .leading, spacing: 10) {
                     CineVerseTextField(
                         placeholder: "Search movies by title...",
@@ -44,8 +44,7 @@ struct SearchScreen: View {
                         }
                     }
                     .padding(.top, 4)
-                    
-                    // Collapse Genre filter chips row
+
                     if showFilters {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 8) {
@@ -76,9 +75,8 @@ struct SearchScreen: View {
                     }
                 }
                 .padding()
-                .background(Color(uiColor: .secondarySystemBackground))
-                
-                // Result scroller
+                .background(AppColors.darkSurface)
+
                 if state.isSearching {
                     Spacer()
                     ProgressView()
@@ -96,21 +94,40 @@ struct SearchScreen: View {
                             ForEach(state.results, id: \.id) { movie in
                                 Button(action: { onNavigateToDetails(movie.id) }) {
                                     HStack(spacing: 12) {
-                                        // Poster left
+                                        
                                         ZStack {
                                             if let path = movie.posterPath, let url = URL(string: path) {
-                                                AsyncImage(url: url) { image in
-                                                    image.resizable().aspectRatio(contentMode: .fill)
-                                                } placeholder: {
-                                                    ProgressView()
+                                                AsyncImage(url: url) { phase in
+                                                    switch phase {
+                                                    case .success(let image):
+                                                        image
+                                                            .resizable()
+                                                            .aspectRatio(contentMode: .fill)
+                                                            .frame(width: 60, height: 90)
+                                                            .clipped()
+                                                    case .failure(_):
+                                                        ImageFallbackView(systemIconName: "film")
+                                                            .frame(width: 60, height: 90)
+                                                    case .empty:
+                                                        ProgressView()
+                                                            .progressViewStyle(CircularProgressViewStyle(tint: AppColors.primary))
+                                                            .frame(width: 60, height: 90)
+                                                    @unknown default:
+                                                        ImageFallbackView(systemIconName: "film")
+                                                            .frame(width: 60, height: 90)
+                                                    }
                                                 }
+                                                .frame(width: 60, height: 90)
+                                                .clipped()
+                                            } else {
+                                                ImageFallbackView(systemIconName: "film")
+                                                    .frame(width: 60, height: 90)
                                             }
                                         }
                                         .frame(width: 60, height: 90)
                                         .cornerRadius(8)
                                         .clipped()
-                                        
-                                        // Details right
+
                                         VStack(alignment: .leading, spacing: 6) {
                                             Text(movie.title)
                                                 .font(AppTypography.bodyMedium)
@@ -131,9 +148,9 @@ struct SearchScreen: View {
                                         Spacer()
                                     }
                                     .padding(8)
-                                    .background(Color(uiColor: .systemBackground))
+                                    .background(AppColors.darkSurface)
                                     .cornerRadius(12)
-                                    .shadow(color: Color.black.opacity(0.05), radius: 5)
+                                    .shadow(color: Color.black.opacity(0.2), radius: 5)
                                 }
                             }
                         }

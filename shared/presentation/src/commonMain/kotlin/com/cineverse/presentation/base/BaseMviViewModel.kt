@@ -12,8 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 abstract class BaseMviViewModel<State, Intent, Effect>(initialState: State) {
-    
-    // Pure Kotlin ViewModelScope that works on both Android and iOS
+
     protected val viewModelScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     
     private val _state = MutableStateFlow(initialState)

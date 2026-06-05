@@ -23,7 +23,6 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}) = startKoin {
     modules(commonModule, platformModule)
 }
 
-// iOS entry point since iOS starts Koin without application contexts
 fun initKoin() = initKoin {}
 
 val commonModule = module {

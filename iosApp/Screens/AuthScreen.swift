@@ -16,8 +16,7 @@ struct AuthScreen: View {
                 
                 VStack(spacing: 20) {
                     Spacer().frame(height: 20)
-                    
-                    // Logo Icon
+
                     ZStack {
                         Circle()
                             .fill(AppColors.primary.opacity(0.1))
@@ -40,8 +39,7 @@ struct AuthScreen: View {
                         .foregroundColor(AppColors.darkTextSecondary)
                         .padding(.top, -10)
                         .padding(.bottom, 20)
-                    
-                    // Tab Selector
+
                     HStack(spacing: 4) {
                         Button(action: { isLoginTab = true }) {
                             Text("Log In")

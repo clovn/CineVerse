@@ -64,7 +64,7 @@ fun MovieCard(
                     contentScale = ContentScale.Crop
                 )
             } else {
-                // Fallback / Loading
+                
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center

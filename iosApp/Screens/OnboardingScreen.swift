@@ -36,7 +36,7 @@ struct OnboardingScreen: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            // Skip Button
+            
             HStack {
                 Spacer()
                 if currentPage < slides.count - 1 {
@@ -51,8 +51,7 @@ struct OnboardingScreen: View {
                     Spacer().frame(height: 40)
                 }
             }
-            
-            // TabView for Page Swipe
+
             TabView(selection: $currentPage) {
                 ForEach(0..<slides.count, id: \.self) { index in
                     let slide = slides[index]
@@ -86,8 +85,7 @@ struct OnboardingScreen: View {
                 }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-            
-            // Indicator dots
+
             HStack(spacing: 8) {
                 ForEach(0..<slides.count, id: \.self) { index in
                     Capsule()
@@ -96,8 +94,7 @@ struct OnboardingScreen: View {
                 }
             }
             .padding(.bottom, 24)
-            
-            // Action Button
+
             let isLastPage = currentPage == slides.count - 1
             CineVerseButton(
                 text: isLastPage ? "Get Started" : "Next",

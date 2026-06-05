@@ -75,7 +75,7 @@ class ProfileViewModel(
                 val userStats = userRepository.getProfileStats(username)
                 updateState { it.copy(stats = userStats) }
             } catch (e: Exception) {
-                // Keep running without stats
+                
             }
         }
     }

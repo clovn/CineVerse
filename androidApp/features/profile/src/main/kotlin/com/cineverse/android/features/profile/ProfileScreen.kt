@@ -78,8 +78,7 @@ fun ProfileScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
-                
-                // Circular Avatar
+
                 Box(
                     modifier = Modifier
                         .size(100.dp)
@@ -110,13 +109,12 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // User Stats CardContainer Grid
                 state.stats?.let { stats ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        // Movies Watched Card
+                        
                         Card(
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(16.dp),
@@ -140,7 +138,6 @@ fun ProfileScreen(
                             }
                         }
 
-                        // Favorite Genre Card
                         Card(
                             modifier = Modifier.weight(1f),
                             shape = RoundedCornerShape(16.dp),

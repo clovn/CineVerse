@@ -90,7 +90,6 @@ fun WatchlistScreen(
             modifier = Modifier.padding(16.dp)
         )
 
-        // Tab selection between Favorites and Watch Later lists
         TabRow(
             selectedTabIndex = state.selectedTab.ordinal,
             containerColor = Color.Transparent,
@@ -153,7 +152,7 @@ fun WatchlistScreen(
                         items = listToDisplay,
                         key = { it.id }
                     ) { movie ->
-                        // Standard SwipeToDismissBox implementation
+                        
                         val dismissState = rememberSwipeToDismissBoxState(
                             confirmValueChange = { dismissValue ->
                                 if (dismissValue == SwipeToDismissBoxValue.EndToStart) {

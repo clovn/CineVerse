@@ -70,9 +70,8 @@ struct ContentView: View {
                     }
                     .tag(4)
                 }
-                .accentColor(AppColors.primary)
-                
-                // Present Details screen as a fluid overlay sliding from bottom
+                .tint(AppColors.primary)
+
                 if let movieId = selectedMovieId {
                     DetailsScreen(movieId: movieId, onNavigateBack: {
                         withAnimation(.spring()) {
@@ -84,6 +83,7 @@ struct ContentView: View {
                 }
             }
         }
+        .preferredColorScheme(.dark)
         .task {
             for await currentState in mainViewModel.state {
                 if let currentState = currentState {

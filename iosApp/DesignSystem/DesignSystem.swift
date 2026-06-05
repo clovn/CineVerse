@@ -1,19 +1,17 @@
 import SwiftUI
 
 struct AppColors {
-    static let primary = Color(red: 225/255, green: 29/255, blue: 72/255) // #E11D48
-    
-    // Dark Theme
-    static let darkBackground = Color(red: 15/255, green: 23/255, blue: 42/255) // #0F172A
-    static let darkSurface = Color(red: 30/255, green: 41/255, blue: 59/255) // #1E293B
-    static let darkTextPrimary = Color(red: 248/255, green: 250/255, blue: 252/255) // #F8FAFC
-    static let darkTextSecondary = Color(red: 148/255, green: 163/255, blue: 184/255) // #94A3B8
-    
-    // Light Theme
-    static let lightBackground = Color(red: 248/255, green: 250/255, blue: 252/255) // #F8FAFC
-    static let lightSurface = Color(red: 255/255, green: 255/255, blue: 255/255) // #FFFFFF
-    static let lightTextPrimary = Color(red: 15/255, green: 23/255, blue: 42/255) // #0F172A
-    static let lightTextSecondary = Color(red: 100/255, green: 116/255, blue: 139/255) // #64748B
+    static let primary = Color(red: 225/255, green: 29/255, blue: 72/255) 
+
+    static let darkBackground = Color(red: 15/255, green: 23/255, blue: 42/255) 
+    static let darkSurface = Color(red: 30/255, green: 41/255, blue: 59/255) 
+    static let darkTextPrimary = Color(red: 248/255, green: 250/255, blue: 252/255) 
+    static let darkTextSecondary = Color(red: 148/255, green: 163/255, blue: 184/255) 
+
+    static let lightBackground = Color(red: 248/255, green: 250/255, blue: 252/255) 
+    static let lightSurface = Color(red: 255/255, green: 255/255, blue: 255/255) 
+    static let lightTextPrimary = Color(red: 15/255, green: 23/255, blue: 42/255) 
+    static let lightTextSecondary = Color(red: 100/255, green: 116/255, blue: 139/255) 
 }
 
 struct AppTypography {
@@ -109,12 +107,26 @@ struct MovieCard: View {
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
-                        default:
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .clipped()
+                        case .failure(_):
+                            ImageFallbackView(systemIconName: "film")
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .clipped()
+                        case .empty:
                             BoxPlaceholder()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .clipped()
+                        @unknown default:
+                            ImageFallbackView(systemIconName: "film")
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .clipped()
                         }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .clipped()
                 } else {
-                    BoxPlaceholder()
+                    ImageFallbackView(systemIconName: "film")
                 }
             }
             .frame(maxWidth: .infinity)
@@ -126,6 +138,27 @@ struct MovieCard: View {
                     .stroke(colorScheme == .light ? Color.gray.opacity(0.2) : Color.clear, lineWidth: 1)
             )
         }
+    }
+}
+
+struct ImageFallbackView: View {
+    var systemIconName: String = "film"
+    
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 30/255, green: 41/255, blue: 59/255), 
+                    Color(red: 15/255, green: 23/255, blue: 42/255)  
+                ]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            Image(systemName: systemIconName)
+                .font(.system(size: 28, weight: .medium))
+                .foregroundColor(AppColors.primary.opacity(0.7))
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

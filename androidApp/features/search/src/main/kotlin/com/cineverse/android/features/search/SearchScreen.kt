@@ -68,7 +68,7 @@ fun SearchScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Sticky Top Search Header
+        
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -108,7 +108,6 @@ fun SearchScreen(
                 }
             )
 
-            // Dynamic Row of Genre Filter Chips (Collapsible)
             AnimatedVisibility(visible = showFilters || state.selectedGenre != null) {
                 LazyRow(
                     contentPadding = PaddingValues(top = 8.dp),
@@ -140,7 +139,6 @@ fun SearchScreen(
             }
         }
 
-        // Search Results List
         if (state.isSearching) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -178,7 +176,7 @@ fun SearchScreen(
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                     ) {
                         Row(modifier = Modifier.fillMaxSize()) {
-                            // Poster on the left
+                            
                             Box(
                                 modifier = Modifier
                                     .width(74.dp)
@@ -193,8 +191,7 @@ fun SearchScreen(
                                     contentScale = ContentScale.Crop
                                 )
                             }
-                            
-                            // Movie description on the right
+
                             Column(
                                 modifier = Modifier
                                     .weight(1f)

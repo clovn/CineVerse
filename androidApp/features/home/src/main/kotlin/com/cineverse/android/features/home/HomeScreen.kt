@@ -82,7 +82,7 @@ fun HomeScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Tab Row switching between Trending & NowPlaying grids
+        
         TabRow(
             selectedTabIndex = state.currentTab.ordinal,
             containerColor = Color.Transparent,
@@ -125,12 +125,11 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Header Span: Auto-scrolling horizontal Carousel (Now Playing)
+                
                 if (state.nowPlaying.isNotEmpty()) {
                     item(span = { GridItemSpan(2) }) {
                         val pagerState = rememberPagerState(pageCount = { state.nowPlaying.size })
-                        
-                        // Auto-scroll loop
+
                         LaunchedEffect(Unit) {
                             while (true) {
                                 delay(4000)
@@ -155,7 +154,7 @@ fun HomeScreen(
                                     .fillMaxSize()
                                     .clickable { onNavigateToDetails(movie.id) }
                             ) {
-                                // Background poster
+                                
                                 val painter = rememberImagePainter(movie.posterPath ?: "")
                                 Image(
                                     painter = painter,
@@ -163,8 +162,7 @@ fun HomeScreen(
                                     modifier = Modifier.fillMaxSize(),
                                     contentScale = ContentScale.Crop
                                 )
-                                
-                                // Gradient Overlay (Bottom-up dark fade)
+
                                 Box(
                                     modifier = Modifier
                                         .fillMaxSize()
@@ -178,7 +176,6 @@ fun HomeScreen(
                                         )
                                 )
 
-                                // Movie Details Text Overlaid
                                 Column(
                                     modifier = Modifier
                                         .align(Alignment.BottomStart)
@@ -216,7 +213,6 @@ fun HomeScreen(
                     }
                 }
 
-                // Grid Section Title
                 item(span = { GridItemSpan(2) }) {
                     Text(
                         text = if (state.currentTab == HomeTab.Trending) "Trending This Week" else "Now Playing in Cinemas",
@@ -225,7 +221,6 @@ fun HomeScreen(
                     )
                 }
 
-                // Dynamic vertical grid list
                 val listToDisplay = if (state.currentTab == HomeTab.Trending) state.movies else state.nowPlaying
                 items(listToDisplay) { movie ->
                     Column(

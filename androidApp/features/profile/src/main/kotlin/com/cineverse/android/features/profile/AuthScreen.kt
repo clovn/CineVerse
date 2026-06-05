@@ -68,12 +68,12 @@ fun AuthScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF0F172A)) // Slate Background
+            .background(Color(0xFF0F172A)) 
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // App Logo Icon
+        
         Box(
             modifier = Modifier
                 .size(80.dp)
@@ -105,7 +105,6 @@ fun AuthScreen(
             modifier = Modifier.padding(top = 4.dp, bottom = 32.dp)
         )
 
-        // Custom Tab Selector
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -151,7 +150,6 @@ fun AuthScreen(
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        // Username Field
         CineVerseTextField(
             value = state.usernameInput,
             onValueChange = { viewModel.sendIntent(ProfileIntent.TypeUsername(it)) },
@@ -168,7 +166,6 @@ fun AuthScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Password Field
         CineVerseTextField(
             value = state.passwordInput,
             onValueChange = { viewModel.sendIntent(ProfileIntent.TypePassword(it)) },
@@ -186,7 +183,6 @@ fun AuthScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Submit Button
         CineVerseButton(
             text = if (isLoginTab) "Log In" else "Create Account",
             onClick = {

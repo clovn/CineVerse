@@ -22,7 +22,6 @@ Thumbs.db
 *.swp
 
 # Xcode / Apple (Excluding generated files as XcodeGen manages project generation)
-iosApp.xcodeproj/
 DerivedData/
 *.mode1v3
 *.mode2v3

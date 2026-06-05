@@ -10,7 +10,7 @@ struct HomeScreen: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(uiColor: .systemBackground).edgesIgnoringSafeArea(.all)
+                AppColors.darkBackground.edgesIgnoringSafeArea(.all)
                 
                 if state.isLoading && state.movies.isEmpty {
                     ProgressView()
@@ -18,22 +18,40 @@ struct HomeScreen: View {
                 } else {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 16) {
-                            
-                            // Carousel section
+
                             if !state.nowPlaying.isEmpty {
                                 TabView {
                                     ForEach(state.nowPlaying, id: \.id) { movie in
                                         Button(action: { onNavigateToDetails(movie.id) }) {
                                             ZStack(alignment: .bottomLeading) {
                                                 if let path = movie.posterPath, let url = URL(string: path) {
-                                                    AsyncImage(url: url) { image in
-                                                        image.resizable().aspectRatio(contentMode: .fill)
-                                                    } placeholder: {
-                                                        ProgressView()
+                                                    AsyncImage(url: url) { phase in
+                                                        switch phase {
+                                                        case .success(let image):
+                                                            image
+                                                                .resizable()
+                                                                .aspectRatio(contentMode: .fill)
+                                                                .frame(height: 220)
+                                                                .clipped()
+                                                        case .failure(_):
+                                                            ImageFallbackView(systemIconName: "popcorn.fill")
+                                                                .frame(height: 220)
+                                                        case .empty:
+                                                            ProgressView()
+                                                                .progressViewStyle(CircularProgressViewStyle(tint: AppColors.primary))
+                                                                .frame(height: 220)
+                                                        @unknown default:
+                                                            ImageFallbackView(systemIconName: "popcorn.fill")
+                                                                .frame(height: 220)
+                                                        }
                                                     }
+                                                    .frame(height: 220)
+                                                    .clipped()
+                                                } else {
+                                                    ImageFallbackView(systemIconName: "popcorn.fill")
+                                                        .frame(height: 220)
                                                 }
-                                                
-                                                // Bottom fade gradient
+
                                                 LinearGradient(
                                                     gradient: Gradient(colors: [.clear, .black.opacity(0.85)]),
                                                     startPoint: .top,
@@ -67,8 +85,7 @@ struct HomeScreen: View {
                                 .cornerRadius(16)
                                 .padding(.horizontal)
                             }
-                            
-                            // Tab Selector
+
                             Picker("", selection: Binding(
                                 get: { state.currentTab },
                                 set: { viewModel.sendIntent(intent: HomeIntent.ChangeTab(tab: $0)) }
@@ -78,13 +95,11 @@ struct HomeScreen: View {
                             }
                             .pickerStyle(SegmentedPickerStyle())
                             .padding(.horizontal)
-                            
-                            // Grid layout header
+
                             Text(state.currentTab == .trending ? "Trending This Week" : "Now Playing in Cinemas")
                                 .font(AppTypography.headingLarge)
                                 .padding(.horizontal)
-                            
-                            // 2 Column Dynamic Grid
+
                             let listToDisplay = state.currentTab == .trending ? state.movies : state.nowPlaying
                             LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
                                 ForEach(listToDisplay, id: \.id) { movie in
@@ -113,7 +128,7 @@ struct HomeScreen: View {
             .navigationTitle("CineVerse")
         }
         .task {
-            // SKIE state flow collection
+            
             for await currentState in viewModel.state {
                 if let currentState = currentState { self.state = currentState }
             }

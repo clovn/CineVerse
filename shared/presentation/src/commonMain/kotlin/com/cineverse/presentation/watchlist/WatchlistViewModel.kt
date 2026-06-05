@@ -65,9 +65,7 @@ class WatchlistViewModel(
     private fun executeRemove(movieId: Int, tab: WatchlistTab) {
         viewModelScope.launch {
             try {
-                // If it's in Favorites, remove it from Favorite list, but check if we need to remove it completely.
-                // Our repo has toggleFavorite / toggleWatchLater, or a simple removeMovie which deletes the entry.
-                // We'll call toggle favorite or toggle watch later based on which tab we are removing from.
+
                 val movie = state.value.favorites.firstOrNull { it.id == movieId }
                     ?: state.value.watchLater.firstOrNull { it.id == movieId }
                     ?: return@launch
