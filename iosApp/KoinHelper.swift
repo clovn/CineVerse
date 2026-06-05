@@ -5,9 +5,8 @@ class KoinHelperSwift {
     
     private var koinHelper: KoinHelper?
     
-    func start() {
-        
-        let _ = KoinKt.doInitKoin()
+    func start(analyticsTracker: AnalyticsTracker) {
+        let _ = KoinIosKt.doInitKoinSwift(analyticsTracker: analyticsTracker)
         koinHelper = KoinHelper()
     }
     

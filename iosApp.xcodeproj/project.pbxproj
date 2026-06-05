@@ -9,11 +9,14 @@
 /* Begin PBXBuildFile section */
 		011102D59704EF57A3F3B149 /* DetailsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03F5100AD2B78FCE7442E4B /* DetailsScreen.swift */; };
 		12A44B08375D64FFE0529FDF /* AuthScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 640AC543F2EA4B6A9F9F37CC /* AuthScreen.swift */; };
+		1C81D6F669B7BB6D2FFCCEB3 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1359B5E3E79A6103CB63C864 /* FirebaseAnalytics */; };
 		27BFA26599C0CD9C6F0265DB /* DiceScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775F86BC757BEFEA0BD03F5A /* DiceScreen.swift */; };
 		307C2654CD5972A25FB7FD87 /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668CECA83ACC03A83C85A623 /* iOSApp.swift */; };
 		3485059D72DFCBC92698535C /* KoinHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F234D1CF41B5AE401E574057 /* KoinHelper.swift */; };
 		41BEB7B7FF16DEA5330198D6 /* SearchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AE12C65BE874BD1DF06484 /* SearchScreen.swift */; };
+		445C052442747365B7CB2124 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 108F0D6F9A31550A5E7E3D81 /* FirebaseCrashlytics */; };
 		56B0305B5D3847FC6B326502 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8509E5A49E4A5CAAEB3ADB /* ContentView.swift */; };
+		603628D30CE02CAC31699E18 /* IOSFirebaseAnalyticsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B83212CE5084AC170B112F /* IOSFirebaseAnalyticsTracker.swift */; };
 		6E0FEBD0873105EF3F15340C /* ProfileScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538EEB48A1C15F4C32C920B0 /* ProfileScreen.swift */; };
 		859A19F944ABC59C57854F64 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ADF0AB31543C2058EC515C /* HomeScreen.swift */; };
 		892580ABF7AECDD004C42E8C /* WatchlistScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248E6AF547758B2EF35A1868 /* WatchlistScreen.swift */; };
@@ -22,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		23B83212CE5084AC170B112F /* IOSFirebaseAnalyticsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSFirebaseAnalyticsTracker.swift; sourceTree = "<group>"; };
 		248E6AF547758B2EF35A1868 /* WatchlistScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchlistScreen.swift; sourceTree = "<group>"; };
 		538EEB48A1C15F4C32C920B0 /* ProfileScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreen.swift; sourceTree = "<group>"; };
 		640AC543F2EA4B6A9F9F37CC /* AuthScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthScreen.swift; sourceTree = "<group>"; };
@@ -37,12 +41,25 @@
 		F234D1CF41B5AE401E574057 /* KoinHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoinHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFrameworksBuildPhase section */
+		EF8A6E9BFD470986D9D5C9B5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C81D6F669B7BB6D2FFCCEB3 /* FirebaseAnalytics in Frameworks */,
+				445C052442747365B7CB2124 /* FirebaseCrashlytics in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
 /* Begin PBXGroup section */
 		1DB4B685CAEE8BEFEBBAEF94 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
 				CE8509E5A49E4A5CAAEB3ADB /* ContentView.swift */,
 				668CECA83ACC03A83C85A623 /* iOSApp.swift */,
+				23B83212CE5084AC170B112F /* IOSFirebaseAnalyticsTracker.swift */,
 				F234D1CF41B5AE401E574057 /* KoinHelper.swift */,
 				BB343BC5AC4DAADDC5FEBA13 /* DesignSystem */,
 				8B838DEB08640EB448E69248 /* Screens */,
@@ -98,6 +115,7 @@
 			buildPhases = (
 				6FE3644042B5DCD5E33FA1FC /* Compile Kotlin Multiplatform Framework */,
 				297B59D9CE634556D6007C40 /* Sources */,
+				EF8A6E9BFD470986D9D5C9B5 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -105,6 +123,8 @@
 			);
 			name = iosApp;
 			packageProductDependencies = (
+				1359B5E3E79A6103CB63C864 /* FirebaseAnalytics */,
+				108F0D6F9A31550A5E7E3D81 /* FirebaseCrashlytics */,
 			);
 			productName = iosApp;
 			productReference = 86038AE1032E284E79B32AD6 /* iosApp.app */;
@@ -130,6 +150,9 @@
 			);
 			mainGroup = 38B69C3F79CD97858CF7B609;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7C4F1707FE80007C7DCEAE3C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 94C98B8B3A2BFC1966447269 /* Products */;
 			projectDirPath = "";
@@ -172,6 +195,7 @@
 				011102D59704EF57A3F3B149 /* DetailsScreen.swift in Sources */,
 				27BFA26599C0CD9C6F0265DB /* DiceScreen.swift in Sources */,
 				859A19F944ABC59C57854F64 /* HomeScreen.swift in Sources */,
+				603628D30CE02CAC31699E18 /* IOSFirebaseAnalyticsTracker.swift in Sources */,
 				3485059D72DFCBC92698535C /* KoinHelper.swift in Sources */,
 				DE64C3B2EF6EC800D5541CC9 /* OnboardingScreen.swift in Sources */,
 				6E0FEBD0873105EF3F15340C /* ProfileScreen.swift in Sources */,
@@ -361,6 +385,30 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7C4F1707FE80007C7DCEAE3C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.27.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		108F0D6F9A31550A5E7E3D81 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7C4F1707FE80007C7DCEAE3C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		1359B5E3E79A6103CB63C864 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7C4F1707FE80007C7DCEAE3C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 242FB5348943441C388468CE /* Project object */;
 }

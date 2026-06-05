@@ -22,6 +22,12 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
             }
         }
+        
+        androidMain {
+            dependencies {
+                implementation(libs.firebase.analytics)
+            }
+        }
     }
 }
 
