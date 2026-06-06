@@ -101,4 +101,4 @@ jobs:
 
       - name: Build iOS SwiftUI Client (Simulator)
         run: |
-          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator -configuration Debug build
+          xcodebuild -project iosApp.xcodeproj -scheme iosApp -sdk iphonesimulator -configuration Debug build
