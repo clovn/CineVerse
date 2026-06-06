@@ -30,10 +30,15 @@ struct DetailsScreen: View {
                     cast: state.cast,
                     isFavorite: state.isFavorite,
                     isWatchLater: state.isWatchLater,
+                    isEditingNote: $isEditingNote,
+                    noteInputText: $noteInputText,
+                    noteText: state.noteText as String?,
                     onNavigateBack: onNavigateBack,
                     onShowDatePicker: { showDatePicker = true },
                     onToggleFavorite: { viewModel.sendIntent(intent: DetailsIntent.ToggleFavorite()) },
-                    onToggleWatchLater: { viewModel.sendIntent(intent: DetailsIntent.ToggleWatchLater()) }
+                    onToggleWatchLater: { viewModel.sendIntent(intent: DetailsIntent.ToggleWatchLater()) },
+                    onSaveNote: { text in viewModel.sendIntent(intent: DetailsIntent.SaveNote(text: text)) },
+                    onDeleteNote: { viewModel.sendIntent(intent: DetailsIntent.DeleteNote()) }
                 )
             }
         }
@@ -143,10 +148,15 @@ struct DetailsContent: View {
     let cast: [CastMember]
     let isFavorite: Bool
     let isWatchLater: Bool
+    @Binding var isEditingNote: Bool
+    @Binding var noteInputText: String
+    let noteText: String?
     let onNavigateBack: () -> Void
     let onShowDatePicker: () -> Void
     let onToggleFavorite: () -> Void
     let onToggleWatchLater: () -> Void
+    let onSaveNote: (String) -> Void
+    let onDeleteNote: () -> Void
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -163,6 +173,14 @@ struct DetailsContent: View {
                     if !cast.isEmpty {
                         CastView(cast: cast)
                     }
+
+                    NotesView(
+                        isEditingNote: $isEditingNote,
+                        noteInputText: $noteInputText,
+                        noteText: noteText,
+                        onSave: onSaveNote,
+                        onDelete: onDeleteNote
+                    )
 
                     Spacer().frame(height: 100)
                 }
@@ -396,76 +414,84 @@ struct CastView: View {
                                 .frame(width: 70)
                         }
                     }
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("My Notes")
-                            .font(AppTypography.headingLarge)
-                            .fontWeight(.bold)
-                            .foregroundColor(AppColors.textPrimary)
-                        
-                        if isEditingNote {
-                            VStack(alignment: .trailing, spacing: 8) {
-                                TextEditor(text: $noteInputText)
-                                    .frame(height: 100)
-                                    .padding(8)
-                                    .background(AppColors.surface)
-                                    .cornerRadius(12)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                    )
-                                
-                                HStack(spacing: 8) {
-                                    if state.noteText != nil {
-                                        Button("Cancel") {
-                                            noteInputText = state.noteText as String? ?? ""
-                                            isEditingNote = false
-                                        }
-                                        .foregroundColor(.gray)
-                                        .padding(.horizontal)
-                                    }
-                                    
-                                    CineVerseButton(text: "Save Note") {
-                                        viewModel.sendIntent(intent: DetailsIntent.SaveNote(text: noteInputText))
-                                        isEditingNote = false
-                                    }
-                                    .frame(width: 120)
-                                }
-                            }
-                        } else {
-                            VStack(alignment: .leading, spacing: 12) {
-                                Text(state.noteText as String? ?? "")
-                                    .font(AppTypography.bodyMedium)
-                                    .foregroundColor(AppColors.textSecondary)
-                                    .padding()
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(AppColors.surface)
-                                    .cornerRadius(12)
-                                
-                                HStack {
-                                    Spacer()
-                                    Button("Delete") {
-                                        viewModel.sendIntent(intent: DetailsIntent.DeleteNote())
-                                    }
-                                    .foregroundColor(.red)
-                                    .padding(.horizontal)
-                                    
-                                    CineVerseButton(text: "Edit") {
-                                        isEditingNote = true
-                                    }
-                                    .frame(width: 100)
-                                }
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                    .padding(.vertical, 8)
-                    
-                    Spacer().frame(height: 100) 
                 }
                 .padding(.horizontal)
             }
         }
+        .padding(.vertical, 8)
+    }
+}
+
+struct NotesView: View {
+    @Binding var isEditingNote: Bool
+    @Binding var noteInputText: String
+    let noteText: String?
+    let onSave: (String) -> Void
+    let onDelete: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("My Notes")
+                .font(AppTypography.headingLarge)
+                .fontWeight(.bold)
+                .foregroundColor(AppColors.textPrimary)
+            
+            if isEditingNote {
+                VStack(alignment: .trailing, spacing: 8) {
+                    TextEditor(text: $noteInputText)
+                        .frame(height: 100)
+                        .padding(8)
+                        .background(AppColors.surface)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                        )
+                    
+                    HStack(spacing: 8) {
+                        if noteText != nil {
+                            Button("Cancel") {
+                                noteInputText = noteText ?? ""
+                                isEditingNote = false
+                            }
+                            .foregroundColor(.gray)
+                            .padding(.horizontal)
+                        }
+                        
+                        CineVerseButton(text: "Save Note") {
+                            onSave(noteInputText)
+                            isEditingNote = false
+                        }
+                        .frame(width: 120)
+                    }
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(noteText ?? "")
+                        .font(AppTypography.bodyMedium)
+                        .foregroundColor(AppColors.textSecondary)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(AppColors.surface)
+                        .cornerRadius(12)
+                    
+                    HStack {
+                        Spacer()
+                        Button("Delete") {
+                            onDelete()
+                        }
+                        .foregroundColor(.red)
+                        .padding(.horizontal)
+                        
+                        CineVerseButton(text: "Edit") {
+                            isEditingNote = true
+                        }
+                        .frame(width: 100)
+                    }
+                }
+            }
+        }
+        .padding(.horizontal)
         .padding(.vertical, 8)
     }
 }
