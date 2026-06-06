@@ -43,7 +43,7 @@ struct OnboardingScreen: View {
                     Button(action: onComplete) {
                         Text("Skip")
                             .font(.system(size: 16, weight: .medium))
-                            .foregroundColor(AppColors.darkTextSecondary)
+                            .foregroundColor(AppColors.textSecondary)
                     }
                     .padding(.trailing, 24)
                     .padding(.top, 16)
@@ -70,13 +70,13 @@ struct OnboardingScreen: View {
                         
                         Text(slide.title)
                             .font(AppTypography.headingLarge)
-                            .foregroundColor(.white)
+                            .foregroundColor(AppColors.textPrimary)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 24)
                         
                         Text(slide.description)
                             .font(AppTypography.bodyMedium)
-                            .foregroundColor(AppColors.darkTextSecondary)
+                            .foregroundColor(AppColors.textSecondary)
                             .multilineTextAlignment(.center)
                             .lineSpacing(4)
                             .padding(.horizontal, 32)
@@ -89,7 +89,7 @@ struct OnboardingScreen: View {
             HStack(spacing: 8) {
                 ForEach(0..<slides.count, id: \.self) { index in
                     Capsule()
-                        .fill(currentPage == index ? AppColors.primary : Color(red: 51/255, green: 65/255, blue: 85/255))
+                        .fill(currentPage == index ? AppColors.primary : AppColors.textSecondary.opacity(0.4))
                         .frame(width: currentPage == index ? 24 : 8, height: 8)
                 }
             }
@@ -111,6 +111,6 @@ struct OnboardingScreen: View {
             .padding(.horizontal, 24)
             .padding(.bottom, 32)
         }
-        .background(AppColors.darkBackground.edgesIgnoringSafeArea(.all))
+        .background(AppColors.background.edgesIgnoringSafeArea(.all))
     }
 }

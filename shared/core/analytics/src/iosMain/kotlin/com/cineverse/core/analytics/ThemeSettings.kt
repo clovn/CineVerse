@@ -2,7 +2,7 @@ package com.cineverse.core.analytics
 
 import platform.Foundation.NSUserDefaults
 
-actual fun getPlatformDarkThemeDefault(): Boolean = true
+actual fun getPlatformDarkThemeDefault(): Boolean = false
 
 actual fun savePlatformDarkTheme(enabled: Boolean) {
     NSUserDefaults.standardUserDefaults.setBool(enabled, "is_dark_theme")

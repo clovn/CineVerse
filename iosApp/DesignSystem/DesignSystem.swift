@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct AppColors {
     static let primary = Color(red: 225/255, green: 29/255, blue: 72/255) 
@@ -11,7 +12,31 @@ struct AppColors {
     static let lightBackground = Color(red: 248/255, green: 250/255, blue: 252/255) 
     static let lightSurface = Color(red: 255/255, green: 255/255, blue: 255/255) 
     static let lightTextPrimary = Color(red: 15/255, green: 23/255, blue: 42/255) 
-    static let lightTextSecondary = Color(red: 100/255, green: 116/255, blue: 139/255) 
+    static let lightTextSecondary = Color(red: 100/255, green: 116/255, blue: 139/255)
+
+    static let background = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark 
+            ? UIColor(red: 15/255, green: 23/255, blue: 42/255, alpha: 1) 
+            : UIColor(red: 248/255, green: 250/255, blue: 252/255, alpha: 1)
+    })
+
+    static let surface = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark 
+            ? UIColor(red: 30/255, green: 41/255, blue: 59/255, alpha: 1) 
+            : UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+    })
+
+    static let textPrimary = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark 
+            ? UIColor(red: 248/255, green: 250/255, blue: 252/255, alpha: 1) 
+            : UIColor(red: 15/255, green: 23/255, blue: 42/255, alpha: 1)
+    })
+
+    static let textSecondary = Color(UIColor { trait in
+        trait.userInterfaceStyle == .dark 
+            ? UIColor(red: 148/255, green: 163/255, blue: 184/255, alpha: 1) 
+            : UIColor(red: 100/255, green: 116/255, blue: 139/255, alpha: 1)
+    })
 }
 
 struct AppTypography {
@@ -82,7 +107,7 @@ struct CineVerseTextField: View {
                 }
             }
         }
-        .background(colorScheme == .dark ? AppColors.darkSurface : AppColors.lightSurface)
+        .background(AppColors.surface)
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
