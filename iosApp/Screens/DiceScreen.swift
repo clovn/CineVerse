@@ -3,63 +3,63 @@ import shared
 
 struct DiceScreen: View {
     let onNavigateToDetails: (Int32) -> Void
-    
+
     @State private var viewModel = KoinHelperSwift.shared.getDiceViewModel()
     @State private var state = DiceState(randomMovie: nil, isRolling: false)
-    
+
     @State private var rotation: Double = 0.0
-    
+
     var body: some View {
         NavigationView {
             ZStack {
                 AppColors.background.edgesIgnoringSafeArea(.all)
-                
+
                 VStack {
-                VStack(spacing: 8) {
-                    Text("Movie Dice")
-                        .font(AppTypography.headingLarge)
-                        .padding(.top, 16)
-                    
-                    Text("Can't decide what to watch? Let the dice choose!")
-                        .font(AppTypography.bodyMedium)
-                        .foregroundColor(.gray)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
-                }
-                
-                Spacer()
+                    VStack(spacing: 8) {
+                        Text("Movie Dice")
+                            .font(AppTypography.headingLarge)
+                            .padding(.top, 16)
 
-                ZStack {
-                    RoundedRectangle(cornerRadius: 24)
-                        .fill(AppColors.primary)
-                        .frame(width: 120, height: 120)
-                        .overlay(
-                            DiceDotsView()
-                        )
-                }
-                .rotation3DEffect(
-                    .degrees(rotation),
-                    axis: (x: 1.0, y: 1.0, z: 0.5)
-                )
-                .onTapGesture {
-                    if !state.isRolling {
-                        viewModel.sendIntent(intent: DiceIntent.RollDice())
+                        Text("Can't decide what to watch? Let the dice choose!")
+                            .font(AppTypography.bodyMedium)
+                            .foregroundColor(.gray)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 32)
                     }
-                }
-                
-                Spacer()
 
-                BoxResultsView()
-                
-                Spacer()
-                
-                CineVerseButton(
-                    text: state.isRolling ? "Rolling..." : "Roll the Dice",
-                    onClick: { viewModel.sendIntent(intent: DiceIntent.RollDice()) },
-                    enabled: !state.isRolling
-                )
-                .padding(.horizontal)
-                .padding(.bottom, 24)
+                    Spacer()
+
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 24)
+                            .fill(AppColors.primary)
+                            .frame(width: 120, height: 120)
+                            .overlay(
+                                diceDotsView()
+                            )
+                    }
+                    .rotation3DEffect(
+                        .degrees(rotation),
+                        axis: (x: 1.0, y: 1.0, z: 0.5)
+                    )
+                    .onTapGesture {
+                        if !state.isRolling {
+                            viewModel.sendIntent(intent: DiceIntent.RollDice())
+                        }
+                    }
+
+                    Spacer()
+
+                    boxResultsView()
+
+                    Spacer()
+
+                    CineVerseButton(
+                        text: state.isRolling ? "Rolling..." : "Roll the Dice",
+                        onClick: { viewModel.sendIntent(intent: DiceIntent.RollDice()) },
+                        enabled: !state.isRolling
+                    )
+                    .padding(.horizontal)
+                    .padding(.bottom, 24)
                 }
             }
             .navigationTitle("Random Picker")
@@ -83,31 +83,45 @@ struct DiceScreen: View {
             }
         }
     }
-    
+
     @ViewBuilder
-    private func DiceDotsView() -> some View {
+    private func diceDotsView() -> some View {
         GeometryReader { geo in
-            let r = geo.size.width * 0.08
-            let w = geo.size.width
-            let h = geo.size.height
-            
+            let dotRadius = geo.size.width * 0.08
+            let width = geo.size.width
+            let height = geo.size.height
+
             ZStack {
-                
-                Circle().fill(Color.white).frame(width: r * 2).position(x: w / 2, y: h / 2)
-                
-                Circle().fill(Color.white).frame(width: r * 2).position(x: w / 4, y: h / 4)
-                
-                Circle().fill(Color.white).frame(width: r * 2).position(x: w * 3 / 4, y: h * 3 / 4)
-                
-                Circle().fill(Color.white).frame(width: r * 2).position(x: w * 3 / 4, y: h / 4)
-                
-                Circle().fill(Color.white).frame(width: r * 2).position(x: w / 4, y: h * 3 / 4)
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: dotRadius * 2)
+                    .position(x: width / 2, y: height / 2)
+
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: dotRadius * 2)
+                    .position(x: width / 4, y: height / 4)
+
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: dotRadius * 2)
+                    .position(x: width * 3 / 4, y: height * 3 / 4)
+
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: dotRadius * 2)
+                    .position(x: width * 3 / 4, y: height / 4)
+
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: dotRadius * 2)
+                    .position(x: width / 4, y: height * 3 / 4)
             }
         }
     }
-    
+
     @ViewBuilder
-    private func BoxResultsView() -> some View {
+    private func boxResultsView() -> some View {
         VStack {
             if state.isRolling {
                 Text("Selecting a masterpiece...")
@@ -125,12 +139,12 @@ struct DiceScreen: View {
                         onNavigateToDetails(movie.id)
                     }
                     .frame(width: 100, height: 150)
-                    
+
                     Text(movie.title)
                         .font(AppTypography.bodyMedium)
                         .fontWeight(.bold)
                         .lineLimit(1)
-                    
+
                     Text("Rating: ★ \(String(format: "%.1f", movie.voteAverage))")
                         .font(AppTypography.labelSmall)
                         .foregroundColor(.gray)

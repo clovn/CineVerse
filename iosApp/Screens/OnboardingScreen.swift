@@ -10,33 +10,36 @@ struct OnboardingSlide {
 
 struct OnboardingScreen: View {
     let onComplete: () -> Void
-    
+
     @State private var currentPage = 0
-    
+
     private let slides = [
         OnboardingSlide(
             title: "Welcome to CineVerse",
-            description: "Discover your next favorite movie, track releases, and build your ultimate watchlist in one clean application.",
+            description: "Discover your next favorite movie, track releases, " +
+                "and build your ultimate watchlist in one clean application.",
             iconName: "film",
             iconColor: AppColors.primary
         ),
         OnboardingSlide(
             title: "Dynamic Movie Roll",
-            description: "Can't decide what to watch? Roll the interactive 3D dice to randomly select a top-rated movie from our database.",
+            description: "Can't decide what to watch? Roll the interactive 3D dice " +
+                "to randomly select a top-rated movie from our database.",
             iconName: "dice.fill",
             iconColor: .blue
         ),
         OnboardingSlide(
             title: "Smart Watchlist Reminders",
-            description: "Add movie releases to your watchlist and schedule custom notifications so you never miss a premiere.",
+            description: "Add movie releases to your watchlist and schedule custom " +
+                "notifications so you never miss a premiere.",
             iconName: "bell.fill.badge.play.fill",
             iconColor: .green
         )
     ]
-    
+
     var body: some View {
         VStack(spacing: 20) {
-            
+
             HStack {
                 Spacer()
                 if currentPage < slides.count - 1 {
@@ -60,20 +63,20 @@ struct OnboardingScreen: View {
                             Circle()
                                 .fill(slide.iconColor.opacity(0.1))
                                 .frame(width: 150, height: 150)
-                            
+
                             Image(systemName: slide.iconName)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 80, height: 80)
                                 .foregroundColor(slide.iconColor)
                         }
-                        
+
                         Text(slide.title)
                             .font(AppTypography.headingLarge)
                             .foregroundColor(AppColors.textPrimary)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 24)
-                        
+
                         Text(slide.description)
                             .font(AppTypography.bodyMedium)
                             .foregroundColor(AppColors.textSecondary)

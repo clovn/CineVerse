@@ -34,6 +34,9 @@ jobs:
   lint-kotlin:
     name: Lint & Code Quality (Kotlin)
     runs-on: ubuntu-latest
+    outputs:
+      errors: ${{ steps.count.outputs.errors }}
+      warnings: ${{ steps.count.outputs.warnings }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -55,6 +58,21 @@ jobs:
         run: |
           mkdir -p kotlin-reports
           find . -type f -path "*/build/reports/lint-results*" -exec cp {} kotlin-reports/ \; 2>/dev/null || true
+
+      - name: Count Lint Issues
+        id: count
+        if: always()
+        run: |
+          ERRORS=0
+          WARNINGS=0
+          for xml in kotlin-reports/*.xml; do
+            if [ -f "$xml" ]; then
+              ERRORS=$((ERRORS + $(grep -oi 'severity="error"' "$xml" | wc -l || echo 0)))
+              WARNINGS=$((WARNINGS + $(grep -oi 'severity="warning"' "$xml" | wc -l || echo 0)))
+            fi
+          done
+          echo "errors=$ERRORS" >> $GITHUB_OUTPUT
+          echo "warnings=$WARNINGS" >> $GITHUB_OUTPUT
 
       - name: Upload Kotlin Lint Reports
         if: always()
@@ -106,6 +124,9 @@ jobs:
     name: Build & Distribute iOS
     runs-on: macos-latest
     needs: lint-kotlin
+    outputs:
+      errors: ${{ steps.count.outputs.errors }}
+      warnings: ${{ steps.count.outputs.warnings }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -129,7 +150,20 @@ jobs:
         run: brew install swiftlint
 
       - name: Run SwiftLint
-        run: swiftlint lint iosApp/ --reporter html --output swiftlint-report.html
+        id: count
+        run: |
+          swiftlint lint iosApp/ > swiftlint-output.txt || true
+          ERRORS=$(grep -c ": error:" swiftlint-output.txt || echo 0)
+          WARNINGS=$(grep -c ": warning:" swiftlint-output.txt || echo 0)
+          echo "errors=$ERRORS" >> $GITHUB_OUTPUT
+          echo "warnings=$WARNINGS" >> $GITHUB_OUTPUT
+          
+          swiftlint lint iosApp/ --reporter html --output swiftlint-report.html || true
+          
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "SwiftLint found errors!"
+            exit 1
+          fi
 
       - name: Upload SwiftLint Report
         if: always()
@@ -150,8 +184,11 @@ jobs:
   notify-end:
     name: Telegram End Notification
     runs-on: ubuntu-latest
-    needs: [build-android, build-ios]
+    needs: [lint-kotlin, build-android, build-ios]
     if: always()
+    permissions:
+      actions: read
+      contents: read
     steps:
       - name: Determine Status
         id: status
@@ -164,6 +201,47 @@ jobs:
             echo "icon=❌" >> $GITHUB_OUTPUT
           fi
 
+      - name: Fetch Artifact Links
+        id: artifacts
+        run: |
+          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts")
+          
+          LINKS=$(echo "$RESPONSE" | jq -r '.artifacts[] | "• [\(.name)](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/\(.id)) (Size: \((.size_in_bytes / 1048576 * 100 | round / 100)) MB)"' || echo "")
+          
+          if [ -z "$LINKS" ]; then
+            LINKS="No artifacts available."
+          fi
+          
+          echo "links<<EOF" >> $GITHUB_OUTPUT
+          echo "$LINKS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Format Warnings
+        id: warnings
+        run: |
+          KOTLIN_ERR="${{ needs.lint-kotlin.outputs.errors }}"
+          KOTLIN_WARN="${{ needs.lint-kotlin.outputs.warnings }}"
+          SWIFT_ERR="${{ needs.build-ios.outputs.errors }}"
+          SWIFT_WARN="${{ needs.build-ios.outputs.warnings }}"
+          
+          KOTLIN_ERR=${KOTLIN_ERR:-0}
+          KOTLIN_WARN=${KOTLIN_WARN:-0}
+          SWIFT_ERR=${SWIFT_ERR:-0}
+          SWIFT_WARN=${SWIFT_WARN:-0}
+          
+          MSG="• *Kotlin:* $KOTLIN_ERR errors, $KOTLIN_WARN warnings\n• *Swift:* $SWIFT_ERR errors, $SWIFT_WARN warnings"
+          
+          if [ "$KOTLIN_ERR" -gt 0 ] || [ "$SWIFT_ERR" -gt 0 ]; then
+            MSG="⚠️ *Lint Errors Found:*\n$MSG"
+          else
+            MSG="✨ *Linter Results:*\n$MSG"
+          fi
+          
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$MSG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Send End Notification
         env:
           MSG_TEXT: |
@@ -172,7 +250,14 @@ jobs:
             *Status:* ${{ steps.status.outputs.status }}
             *Branch:* `${{ github.ref_name }}`
             *Commit:* [${{ github.sha }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
-            *Run Details & Artifacts:* [View Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            *Message:* ${{ github.event.head_commit.message || 'Triggered manually/PR' }}
+
+            ${{ steps.warnings.outputs.summary }}
+
+            📦 *Artifacts:*
+            ${{ steps.artifacts.outputs.links }}
+
+            🔗 [View Run Details on GitHub](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
         run: |
           if [ -n "${{ secrets.TELEGRAM_BOT_TOKEN }}" ] && [ -n "${{ secrets.TELEGRAM_CHAT_ID }}" ]; then
             curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
@@ -203,7 +288,6 @@ jobs:
         if: steps.status.outputs.status == 'success'
         run: |
           if [ -n "${{ secrets.TELEGRAM_BOT_TOKEN }}" ] && [ -n "${{ secrets.TELEGRAM_CHAT_ID }}" ]; then
-            # Send Kotlin linter reports if they exist
             if [ -d "kotlin-reports" ]; then
               for file in kotlin-reports/*; do
                 if [ -f "$file" ]; then
@@ -212,7 +296,6 @@ jobs:
                 fi
               done
             fi
-            # Send SwiftLint report if it exists
             if [ -f "swiftlint-report/swiftlint-report.html" ]; then
               echo "Sending SwiftLint report"
               curl -s -F chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" -F document=@"swiftlint-report/swiftlint-report.html" "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument"
