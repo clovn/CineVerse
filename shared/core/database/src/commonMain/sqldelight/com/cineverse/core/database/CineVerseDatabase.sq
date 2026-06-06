@@ -73,3 +73,23 @@ insertSettings:
 INSERT OR REPLACE INTO AppSettings(id, isOnboardingCompleted)
 VALUES (1, ?);
 
+
+-- Personal Movie Notes Table
+CREATE TABLE MovieNote (
+    movieId INTEGER NOT NULL,
+    username TEXT NOT NULL,
+    noteText TEXT NOT NULL,
+    PRIMARY KEY (movieId, username)
+);
+
+insertOrReplaceNote:
+INSERT OR REPLACE INTO MovieNote(movieId, username, noteText)
+VALUES (?, ?, ?);
+
+getNote:
+SELECT * FROM MovieNote WHERE movieId = ? AND username = ?;
+
+deleteNote:
+DELETE FROM MovieNote WHERE movieId = ? AND username = ?;
+
+

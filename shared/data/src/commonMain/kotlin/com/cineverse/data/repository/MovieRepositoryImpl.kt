@@ -180,6 +180,18 @@ class MovieRepositoryImpl(
         queries.removeMovie(movieId.toLong())
     }
 
+    override suspend fun getMovieNote(movieId: Int, username: String): String? = withContext(Dispatchers.IO) {
+        queries.getNote(movieId.toLong(), username).executeAsOneOrNull()?.noteText
+    }
+
+    override suspend fun saveMovieNote(movieId: Int, username: String, noteText: String) = withContext(Dispatchers.IO) {
+        queries.insertOrReplaceNote(movieId.toLong(), username, noteText)
+    }
+
+    override suspend fun deleteMovieNote(movieId: Int, username: String) = withContext(Dispatchers.IO) {
+        queries.deleteNote(movieId.toLong(), username)
+    }
+
     private fun fallbackMovies(): List<Movie> = listOf(
         Movie(693134, "Dune: Part Two", "https://image.tmdb.org/t/p/w500/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg", "2024-02-27", 8.3),
         Movie(872585, "Oppenheimer", "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg", "2023-07-19", 8.1),

@@ -34,7 +34,7 @@ val commonModule = module {
     
     factory { HomeViewModel(get(), get()) }
     factory { SearchViewModel(get(), get()) }
-    factory { DetailsViewModel(get(), get()) }
+    factory { DetailsViewModel(get(), get(), get()) }
     factory { ProfileViewModel(get(), get()) }
     factory { WatchlistViewModel(get(), get()) }
     factory { DiceViewModel(get(), get()) }

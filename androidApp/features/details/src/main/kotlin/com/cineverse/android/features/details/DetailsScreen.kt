@@ -44,6 +44,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -265,6 +270,107 @@ fun DetailsScreen(
                                         overflow = TextOverflow.Ellipsis
                                     )
                                 }
+                            }
+                        }
+                    }
+
+                    // Personal Notes Feature Section
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "My Notes",
+                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 18.sp),
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                    )
+                    
+                    var noteTextState by remember { mutableStateOf(state.noteText ?: "") }
+                    var isEditingNote by remember { mutableStateOf(state.noteText == null) }
+                    
+                    LaunchedEffect(state.noteText) {
+                        noteTextState = state.noteText ?: ""
+                        isEditingNote = state.noteText == null
+                    }
+                    
+                    if (isEditingNote) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            OutlinedTextField(
+                                value = noteTextState,
+                                onValueChange = { noteTextState = it },
+                                placeholder = { Text("Write your thoughts about this movie...") },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(100.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                textStyle = MaterialTheme.typography.bodyMedium.copy(
+                                    color = MaterialTheme.colorScheme.onSurface
+                                ),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                    unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                                    unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                if (state.noteText != null) {
+                                    CineVerseButton(
+                                        text = "Cancel",
+                                        onClick = {
+                                            noteTextState = state.noteText ?: ""
+                                            isEditingNote = false
+                                        },
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    )
+                                }
+                                CineVerseButton(
+                                    text = "Save Note",
+                                    onClick = {
+                                        viewModel.sendIntent(DetailsIntent.SaveNote(noteTextState))
+                                        isEditingNote = false
+                                    }
+                                )
+                            }
+                        }
+                    } else {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.surface)
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = state.noteText ?: "",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
+                            ) {
+                                CineVerseButton(
+                                    text = "Delete",
+                                    onClick = {
+                                        viewModel.sendIntent(DetailsIntent.DeleteNote)
+                                    },
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                                CineVerseButton(
+                                    text = "Edit",
+                                    onClick = {
+                                        isEditingNote = true
+                                    }
+                                )
                             }
                         }
                     }
