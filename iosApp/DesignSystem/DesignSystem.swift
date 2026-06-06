@@ -2,39 +2,39 @@ import SwiftUI
 import UIKit
 
 struct AppColors {
-    static let primary = Color(red: 225/255, green: 29/255, blue: 72/255) 
+    static let primary = Color(red: 225/255, green: 29/255, blue: 72/255)
 
-    static let darkBackground = Color(red: 15/255, green: 23/255, blue: 42/255) 
-    static let darkSurface = Color(red: 30/255, green: 41/255, blue: 59/255) 
-    static let darkTextPrimary = Color(red: 248/255, green: 250/255, blue: 252/255) 
-    static let darkTextSecondary = Color(red: 148/255, green: 163/255, blue: 184/255) 
+    static let darkBackground = Color(red: 15/255, green: 23/255, blue: 42/255)
+    static let darkSurface = Color(red: 30/255, green: 41/255, blue: 59/255)
+    static let darkTextPrimary = Color(red: 248/255, green: 250/255, blue: 252/255)
+    static let darkTextSecondary = Color(red: 148/255, green: 163/255, blue: 184/255)
 
-    static let lightBackground = Color(red: 248/255, green: 250/255, blue: 252/255) 
-    static let lightSurface = Color(red: 255/255, green: 255/255, blue: 255/255) 
-    static let lightTextPrimary = Color(red: 15/255, green: 23/255, blue: 42/255) 
+    static let lightBackground = Color(red: 248/255, green: 250/255, blue: 252/255)
+    static let lightSurface = Color(red: 255/255, green: 255/255, blue: 255/255)
+    static let lightTextPrimary = Color(red: 15/255, green: 23/255, blue: 42/255)
     static let lightTextSecondary = Color(red: 100/255, green: 116/255, blue: 139/255)
 
     static let background = Color(UIColor { trait in
-        trait.userInterfaceStyle == .dark 
-            ? UIColor(red: 15/255, green: 23/255, blue: 42/255, alpha: 1) 
+        trait.userInterfaceStyle == .dark
+            ? UIColor(red: 15/255, green: 23/255, blue: 42/255, alpha: 1)
             : UIColor(red: 248/255, green: 250/255, blue: 252/255, alpha: 1)
     })
 
     static let surface = Color(UIColor { trait in
-        trait.userInterfaceStyle == .dark 
-            ? UIColor(red: 30/255, green: 41/255, blue: 59/255, alpha: 1) 
+        trait.userInterfaceStyle == .dark
+            ? UIColor(red: 30/255, green: 41/255, blue: 59/255, alpha: 1)
             : UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
     })
 
     static let textPrimary = Color(UIColor { trait in
-        trait.userInterfaceStyle == .dark 
-            ? UIColor(red: 248/255, green: 250/255, blue: 252/255, alpha: 1) 
+        trait.userInterfaceStyle == .dark
+            ? UIColor(red: 248/255, green: 250/255, blue: 252/255, alpha: 1)
             : UIColor(red: 15/255, green: 23/255, blue: 42/255, alpha: 1)
     })
 
     static let textSecondary = Color(UIColor { trait in
-        trait.userInterfaceStyle == .dark 
-            ? UIColor(red: 148/255, green: 163/255, blue: 184/255, alpha: 1) 
+        trait.userInterfaceStyle == .dark
+            ? UIColor(red: 148/255, green: 163/255, blue: 184/255, alpha: 1)
             : UIColor(red: 100/255, green: 116/255, blue: 139/255, alpha: 1)
     })
 }
@@ -50,7 +50,7 @@ struct CineVerseButton: View {
     let onClick: () -> Void
     var isLoading: Bool = false
     var enabled: Bool = true
-    
+
     var body: some View {
         Button(action: onClick) {
             ZStack {
@@ -77,10 +77,10 @@ struct CineVerseTextField: View {
     let placeholder: String
     @Binding var text: String
     var isSecure: Bool = false
-    var leadingIcon: String? = nil
-    
+    var leadingIcon: String?
+
     @Environment(\.colorScheme) var colorScheme
-    
+
     var body: some View {
         HStack {
             if let icon = leadingIcon {
@@ -88,7 +88,7 @@ struct CineVerseTextField: View {
                     .foregroundColor(.gray)
                     .padding(.leading, 12)
             }
-            
+
             if isSecure {
                 SecureField(placeholder, text: $text)
                     .font(AppTypography.bodyMedium)
@@ -98,13 +98,13 @@ struct CineVerseTextField: View {
                     .font(AppTypography.bodyMedium)
                     .padding(12)
             }
-            
+
             if !text.isEmpty {
-                Button(action: { text = "" }) {
+                Button(action: { text = "" }, label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.gray)
                         .padding(.trailing, 12)
-                }
+                })
             }
         }
         .background(AppColors.surface)
@@ -119,9 +119,9 @@ struct CineVerseTextField: View {
 struct MovieCard: View {
     let imageUrl: String?
     let onClick: () -> Void
-    
+
     @Environment(\.colorScheme) var colorScheme
-    
+
     var body: some View {
         Button(action: onClick) {
             ZStack {
@@ -134,7 +134,7 @@ struct MovieCard: View {
                                 .aspectRatio(contentMode: .fill)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .clipped()
-                        case .failure(_):
+                        case .failure:
                             ImageFallbackView(systemIconName: "film")
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .clipped()
@@ -168,13 +168,13 @@ struct MovieCard: View {
 
 struct ImageFallbackView: View {
     var systemIconName: String = "film"
-    
+
     var body: some View {
         ZStack {
             LinearGradient(
                 gradient: Gradient(colors: [
-                    Color(red: 30/255, green: 41/255, blue: 59/255), 
-                    Color(red: 15/255, green: 23/255, blue: 42/255)  
+                    Color(red: 30/255, green: 41/255, blue: 59/255),
+                    Color(red: 15/255, green: 23/255, blue: 42/255)
                 ]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing

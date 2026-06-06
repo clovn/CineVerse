@@ -3,15 +3,21 @@ import shared
 
 struct HomeScreen: View {
     let onNavigateToDetails: (Int32) -> Void
-    
+
     @State private var viewModel = KoinHelperSwift.shared.getHomeViewModel()
-    @State private var state = HomeState(movies: [], nowPlaying: [], isLoading: false, error: nil, currentTab: .trending)
-    
+    @State private var state = HomeState(
+        movies: [],
+        nowPlaying: [],
+        isLoading: false,
+        error: nil,
+        currentTab: .trending
+    )
+
     var body: some View {
         NavigationView {
             ZStack {
                 AppColors.background.edgesIgnoringSafeArea(.all)
-                
+
                 if state.isLoading && state.movies.isEmpty {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: AppColors.primary))
@@ -22,7 +28,7 @@ struct HomeScreen: View {
                             if !state.nowPlaying.isEmpty {
                                 TabView {
                                     ForEach(state.nowPlaying, id: \.id) { movie in
-                                        Button(action: { onNavigateToDetails(movie.id) }) {
+                                        Button(action: { onNavigateToDetails(movie.id) }, label: {
                                             ZStack(alignment: .bottomLeading) {
                                                 if let path = movie.posterPath, let url = URL(string: path) {
                                                     AsyncImage(url: url) { phase in
@@ -33,12 +39,14 @@ struct HomeScreen: View {
                                                                 .aspectRatio(contentMode: .fill)
                                                                 .frame(height: 220)
                                                                 .clipped()
-                                                        case .failure(_):
+                                                        case .failure:
                                                             ImageFallbackView(systemIconName: "popcorn.fill")
                                                                 .frame(height: 220)
                                                         case .empty:
                                                             ProgressView()
-                                                                .progressViewStyle(CircularProgressViewStyle(tint: AppColors.primary))
+                                                                .progressViewStyle(
+                                                                    CircularProgressViewStyle(tint: AppColors.primary)
+                                                                )
                                                                 .frame(height: 220)
                                                         @unknown default:
                                                             ImageFallbackView(systemIconName: "popcorn.fill")
@@ -57,13 +65,13 @@ struct HomeScreen: View {
                                                     startPoint: .top,
                                                     endPoint: .bottom
                                                 )
-                                                
+
                                                 VStack(alignment: .leading, spacing: 4) {
                                                     Text(movie.title)
                                                         .font(.title3)
                                                         .fontWeight(.bold)
                                                         .foregroundColor(.white)
-                                                    
+
                                                     HStack {
                                                         Text("★ \(String(format: "%.1f", movie.voteAverage))")
                                                             .font(AppTypography.labelSmall)
@@ -77,7 +85,7 @@ struct HomeScreen: View {
                                                 }
                                                 .padding()
                                             }
-                                        }
+                                        })
                                     }
                                 }
                                 .tabViewStyle(PageTabViewStyle())
@@ -101,18 +109,22 @@ struct HomeScreen: View {
                                 .padding(.horizontal)
 
                             let listToDisplay = state.currentTab == .trending ? state.movies : state.nowPlaying
-                            LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 16) {
+                            let columns = [
+                                GridItem(.flexible(), spacing: 16),
+                                GridItem(.flexible(), spacing: 16)
+                            ]
+                            LazyVGrid(columns: columns, spacing: 16) {
                                 ForEach(listToDisplay, id: \.id) { movie in
                                     VStack(alignment: .leading, spacing: 6) {
                                         MovieCard(imageUrl: movie.posterPath) {
                                             onNavigateToDetails(movie.id)
                                         }
-                                        
+
                                         Text(movie.title)
                                             .font(AppTypography.bodyMedium)
                                             .fontWeight(.bold)
                                             .lineLimit(1)
-                                        
+
                                         Text("★ \(String(format: "%.1f", movie.voteAverage))")
                                             .font(AppTypography.labelSmall)
                                             .foregroundColor(AppColors.primary)
@@ -128,7 +140,7 @@ struct HomeScreen: View {
             .navigationTitle("CineVerse")
         }
         .task {
-            
+
             for await currentState in viewModel.state {
                 if let currentState = currentState { self.state = currentState }
             }
