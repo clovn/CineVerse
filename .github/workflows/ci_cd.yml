@@ -153,8 +153,8 @@ jobs:
         id: count
         run: |
           swiftlint lint iosApp/ > swiftlint-output.txt || true
-          ERRORS=$(grep -c ": error:" swiftlint-output.txt || echo 0)
-          WARNINGS=$(grep -c ": warning:" swiftlint-output.txt || echo 0)
+          ERRORS=$(grep -c ": error:" swiftlint-output.txt || true)
+          WARNINGS=$(grep -c ": warning:" swiftlint-output.txt || true)
           echo "errors=$ERRORS" >> $GITHUB_OUTPUT
           echo "warnings=$WARNINGS" >> $GITHUB_OUTPUT
           
