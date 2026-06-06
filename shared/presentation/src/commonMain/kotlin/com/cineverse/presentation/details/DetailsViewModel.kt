@@ -5,7 +5,9 @@ import com.cineverse.domain.model.CastMember
 import com.cineverse.domain.model.Movie
 import com.cineverse.domain.model.MovieDetails
 import com.cineverse.domain.repository.MovieRepository
+import com.cineverse.domain.repository.UserRepository
 import com.cineverse.presentation.base.BaseMviViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class DetailsState(
@@ -14,7 +16,9 @@ data class DetailsState(
     val isLoading: Boolean = false,
     val isFavorite: Boolean = false,
     val isWatchLater: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val noteText: String? = null,
+    val currentUsername: String? = null
 )
 
 sealed class DetailsIntent {
@@ -22,6 +26,8 @@ sealed class DetailsIntent {
     data object ToggleFavorite : DetailsIntent()
     data object ToggleWatchLater : DetailsIntent()
     data class ScheduleReminder(val dateTime: String) : DetailsIntent()
+    data class SaveNote(val text: String) : DetailsIntent()
+    data object DeleteNote : DetailsIntent()
 }
 
 sealed class DetailsEffect {
@@ -31,6 +37,7 @@ sealed class DetailsEffect {
 
 class DetailsViewModel(
     private val movieRepository: MovieRepository,
+    private val userRepository: UserRepository,
     private val analyticsTracker: AnalyticsTracker
 ) : BaseMviViewModel<DetailsState, DetailsIntent, DetailsEffect>(DetailsState()) {
 
@@ -40,6 +47,8 @@ class DetailsViewModel(
             is DetailsIntent.ToggleFavorite -> toggleFavorite()
             is DetailsIntent.ToggleWatchLater -> toggleWatchLater()
             is DetailsIntent.ScheduleReminder -> scheduleReminder(intent.dateTime)
+            is DetailsIntent.SaveNote -> saveNote(intent.text)
+            is DetailsIntent.DeleteNote -> deleteNote()
         }
     }
 
@@ -52,13 +61,21 @@ class DetailsViewModel(
                 val cast = movieRepository.getMovieCast(id)
                 val fav = movieRepository.isFavorite(id)
                 val watch = movieRepository.isWatchLater(id)
+                
+                // Fetch current user and their movie note
+                val activeUser = userRepository.getActiveSession().first()
+                val username = activeUser?.username
+                val note = if (username != null) movieRepository.getMovieNote(id, username) else null
+                
                 updateState {
                     it.copy(
                         movieDetails = details,
                         cast = cast,
                         isFavorite = fav,
                         isWatchLater = watch,
-                        isLoading = false
+                        isLoading = false,
+                        currentUsername = username,
+                        noteText = note
                     )
                 }
             } catch (e: Exception) {
@@ -113,5 +130,30 @@ class DetailsViewModel(
     private fun scheduleReminder(dateTime: String) {
         val details = state.value.movieDetails ?: return
         sendEffect(DetailsEffect.ScheduleNotification(details.title, dateTime))
+    }
+
+    private fun saveNote(text: String) {
+        val details = state.value.movieDetails ?: return
+        val username = state.value.currentUsername ?: return
+        if (text.isBlank()) {
+            sendEffect(DetailsEffect.ShowMessage("Note text cannot be empty"))
+            return
+        }
+        viewModelScope.launch {
+            movieRepository.saveMovieNote(details.id, username, text)
+            updateState { it.copy(noteText = text) }
+            analyticsTracker.trackEvent("save_movie_note", mapOf("movie_id" to details.id.toString()))
+            sendEffect(DetailsEffect.ShowMessage("Note saved"))
+        }
+    }
+
+    private fun deleteNote() {
+        val details = state.value.movieDetails ?: return
+        val username = state.value.currentUsername ?: return
+        viewModelScope.launch {
+            movieRepository.deleteMovieNote(details.id, username)
+            updateState { it.copy(noteText = null) }
+            sendEffect(DetailsEffect.ShowMessage("Note deleted"))
+        }
     }
 }

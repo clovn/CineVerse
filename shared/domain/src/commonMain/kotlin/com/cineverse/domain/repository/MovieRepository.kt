@@ -20,4 +20,8 @@ interface MovieRepository {
     suspend fun toggleFavorite(movie: Movie)
     suspend fun toggleWatchLater(movie: Movie)
     suspend fun removeMovie(movieId: Int)
+    
+    suspend fun getMovieNote(movieId: Int, username: String): String?
+    suspend fun saveMovieNote(movieId: Int, username: String, noteText: String)
+    suspend fun deleteMovieNote(movieId: Int, username: String)
 }
