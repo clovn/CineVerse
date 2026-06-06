@@ -3,17 +3,25 @@ import shared
 
 struct AuthScreen: View {
     @State private var viewModel = KoinHelperSwift.shared.getProfileViewModel()
-    @State private var state = ProfileState(user: nil, isAuthorized: false, stats: nil, usernameInput: "", passwordInput: "", isLoading: false, error: nil)
+    @State private var state = ProfileState(
+        user: nil,
+        isAuthorized: false,
+        stats: nil,
+        usernameInput: "",
+        passwordInput: "",
+        isLoading: false,
+        error: nil
+    )
     @State private var isLoginTab = true
-    
+
     @State private var alertMessage: String?
     @State private var showAlert: Bool = false
-    
+
     var body: some View {
         NavigationView {
             ZStack {
                 AppColors.background.edgesIgnoringSafeArea(.all)
-                
+
                 VStack(spacing: 20) {
                     Spacer().frame(height: 20)
 
@@ -21,19 +29,19 @@ struct AuthScreen: View {
                         Circle()
                             .fill(AppColors.primary.opacity(0.1))
                             .frame(width: 80, height: 80)
-                        
+
                         Image(systemName: "film")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 44, height: 44)
                             .foregroundColor(AppColors.primary)
                     }
-                    
+
                     Text("CineVerse")
                         .font(AppTypography.headingLarge)
                         .foregroundColor(AppColors.textPrimary)
                         .fontWeight(.bold)
-                    
+
                     Text("Your Ultimate Movie Companion")
                         .font(AppTypography.bodyMedium)
                         .foregroundColor(AppColors.textSecondary)
@@ -41,7 +49,7 @@ struct AuthScreen: View {
                         .padding(.bottom, 20)
 
                     HStack(spacing: 4) {
-                        Button(action: { isLoginTab = true }) {
+                        Button(action: { isLoginTab = true }, label: {
                             Text("Log In")
                                 .font(.system(size: 16, weight: .bold))
                                 .foregroundColor(isLoginTab ? .white : AppColors.textSecondary)
@@ -49,9 +57,9 @@ struct AuthScreen: View {
                                 .frame(height: 44)
                                 .background(isLoginTab ? AppColors.primary : Color.clear)
                                 .cornerRadius(8)
-                        }
-                        
-                        Button(action: { isLoginTab = false }) {
+                        })
+
+                        Button(action: { isLoginTab = false }, label: {
                             Text("Register")
                                 .font(.system(size: 16, weight: .bold))
                                 .foregroundColor(!isLoginTab ? .white : AppColors.textSecondary)
@@ -59,15 +67,15 @@ struct AuthScreen: View {
                                 .frame(height: 44)
                                 .background(!isLoginTab ? AppColors.primary : Color.clear)
                                 .cornerRadius(8)
-                        }
+                        })
                     }
                     .padding(4)
                     .background(AppColors.surface)
                     .cornerRadius(12)
                     .padding(.horizontal)
-                    
+
                     Spacer().frame(height: 10)
-                    
+
                     CineVerseTextField(
                         placeholder: "Username",
                         text: Binding(
@@ -77,7 +85,7 @@ struct AuthScreen: View {
                         leadingIcon: "person.fill"
                     )
                     .padding(.horizontal)
-                    
+
                     CineVerseTextField(
                         placeholder: isLoginTab ? "Password" : "Password (min 4 characters)",
                         text: Binding(
@@ -88,9 +96,9 @@ struct AuthScreen: View {
                         leadingIcon: "lock.fill"
                     )
                     .padding(.horizontal)
-                    
+
                     Spacer().frame(height: 10)
-                    
+
                     CineVerseButton(
                         text: isLoginTab ? "Log In" : "Create Account",
                         onClick: {
@@ -103,13 +111,17 @@ struct AuthScreen: View {
                         isLoading: state.isLoading
                     )
                     .padding(.horizontal)
-                    
+
                     Spacer()
                 }
             }
             .navigationBarHidden(true)
             .alert(isPresented: $showAlert) {
-                Alert(title: Text("Auth Status"), message: Text(alertMessage ?? ""), dismissButton: .default(Text("OK")))
+                Alert(
+                    title: Text("Auth Status"),
+                    message: Text(alertMessage ?? ""),
+                    dismissButton: .default(Text("OK"))
+                )
             }
         }
         .task {

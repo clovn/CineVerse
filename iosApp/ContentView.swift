@@ -3,11 +3,16 @@ import shared
 
 struct ContentView: View {
     @State private var activeTab = 0
-    @State private var selectedMovieId: Int32? = nil
-    
+    @State private var selectedMovieId: Int32?
+
     @State private var mainViewModel = KoinHelperSwift.shared.getMainViewModel()
-    @State private var mainState = MainState(isOnboardingCompleted: false, isAuthorized: false, isLoading: true, isDarkTheme: false)
-    
+    @State private var mainState = MainState(
+        isOnboardingCompleted: false,
+        isAuthorized: false,
+        isLoading: true,
+        isDarkTheme: false
+    )
+
     var body: some View {
         ZStack {
             if mainState.isLoading {
@@ -33,7 +38,7 @@ struct ContentView: View {
                         Label("Home", systemImage: "house.fill")
                     }
                     .tag(0)
-                    
+
                     SearchScreen(onNavigateToDetails: { id in
                         withAnimation(.spring()) {
                             selectedMovieId = id
@@ -43,7 +48,7 @@ struct ContentView: View {
                         Label("Search", systemImage: "magnifyingglass")
                     }
                     .tag(1)
-                    
+
                     DiceScreen(onNavigateToDetails: { id in
                         withAnimation(.spring()) {
                             selectedMovieId = id
@@ -53,7 +58,7 @@ struct ContentView: View {
                         Label("Dice", systemImage: "dice.fill")
                     }
                     .tag(2)
-                    
+
                     WatchlistScreen(onNavigateToDetails: { id in
                         withAnimation(.spring()) {
                             selectedMovieId = id
