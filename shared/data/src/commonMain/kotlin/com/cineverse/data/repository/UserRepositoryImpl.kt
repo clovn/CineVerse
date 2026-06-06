@@ -57,8 +57,8 @@ class UserRepositoryImpl(
     }
 
     override suspend fun getProfileStats(username: String): ProfileStats = withContext(Dispatchers.IO) {
-        val favorites = queries.getFavoriteMovies().executeAsList()
-        val watchLater = queries.getWatchLaterMovies().executeAsList()
+        val favorites = queries.getFavoriteMovies(username).executeAsList()
+        val watchLater = queries.getWatchLaterMovies(username).executeAsList()
 
         val baseCount = if (favorites.isNotEmpty() || watchLater.isNotEmpty()) 12 else 0
         val totalWatched = favorites.size + watchLater.size + baseCount

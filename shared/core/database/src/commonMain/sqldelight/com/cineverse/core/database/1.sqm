@@ -1,0 +1,7 @@
+-- Migration from version 1 to 2
+CREATE TABLE MovieNote (
+    movieId INTEGER NOT NULL,
+    username TEXT NOT NULL,
+    noteText TEXT NOT NULL,
+    PRIMARY KEY (movieId, username)
+);
