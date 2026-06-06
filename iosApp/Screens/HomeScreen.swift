@@ -10,7 +10,7 @@ struct HomeScreen: View {
     var body: some View {
         NavigationView {
             ZStack {
-                AppColors.darkBackground.edgesIgnoringSafeArea(.all)
+                AppColors.background.edgesIgnoringSafeArea(.all)
                 
                 if state.isLoading && state.movies.isEmpty {
                     ProgressView()

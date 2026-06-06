@@ -12,7 +12,7 @@ struct AuthScreen: View {
     var body: some View {
         NavigationView {
             ZStack {
-                AppColors.darkBackground.edgesIgnoringSafeArea(.all)
+                AppColors.background.edgesIgnoringSafeArea(.all)
                 
                 VStack(spacing: 20) {
                     Spacer().frame(height: 20)
@@ -31,12 +31,12 @@ struct AuthScreen: View {
                     
                     Text("CineVerse")
                         .font(AppTypography.headingLarge)
-                        .foregroundColor(.white)
+                        .foregroundColor(AppColors.textPrimary)
                         .fontWeight(.bold)
                     
                     Text("Your Ultimate Movie Companion")
                         .font(AppTypography.bodyMedium)
-                        .foregroundColor(AppColors.darkTextSecondary)
+                        .foregroundColor(AppColors.textSecondary)
                         .padding(.top, -10)
                         .padding(.bottom, 20)
 
@@ -44,7 +44,7 @@ struct AuthScreen: View {
                         Button(action: { isLoginTab = true }) {
                             Text("Log In")
                                 .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(isLoginTab ? .white : AppColors.darkTextSecondary)
+                                .foregroundColor(isLoginTab ? .white : AppColors.textSecondary)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 44)
                                 .background(isLoginTab ? AppColors.primary : Color.clear)
@@ -54,7 +54,7 @@ struct AuthScreen: View {
                         Button(action: { isLoginTab = false }) {
                             Text("Register")
                                 .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(!isLoginTab ? .white : AppColors.darkTextSecondary)
+                                .foregroundColor(!isLoginTab ? .white : AppColors.textSecondary)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 44)
                                 .background(!isLoginTab ? AppColors.primary : Color.clear)
@@ -62,7 +62,7 @@ struct AuthScreen: View {
                         }
                     }
                     .padding(4)
-                    .background(AppColors.darkSurface)
+                    .background(AppColors.surface)
                     .cornerRadius(12)
                     .padding(.horizontal)
                     

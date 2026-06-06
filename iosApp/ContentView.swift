@@ -6,13 +6,13 @@ struct ContentView: View {
     @State private var selectedMovieId: Int32? = nil
     
     @State private var mainViewModel = KoinHelperSwift.shared.getMainViewModel()
-    @State private var mainState = MainState(isOnboardingCompleted: false, isAuthorized: false, isLoading: true)
+    @State private var mainState = MainState(isOnboardingCompleted: false, isAuthorized: false, isLoading: true, isDarkTheme: false)
     
     var body: some View {
         ZStack {
             if mainState.isLoading {
                 ZStack {
-                    AppColors.darkBackground.edgesIgnoringSafeArea(.all)
+                    AppColors.background.edgesIgnoringSafeArea(.all)
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: AppColors.primary))
                 }

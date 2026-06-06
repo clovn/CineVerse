@@ -11,7 +11,10 @@ struct DiceScreen: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            ZStack {
+                AppColors.background.edgesIgnoringSafeArea(.all)
+                
+                VStack {
                 VStack(spacing: 8) {
                     Text("Movie Dice")
                         .font(AppTypography.headingLarge)
@@ -57,6 +60,7 @@ struct DiceScreen: View {
                 )
                 .padding(.horizontal)
                 .padding(.bottom, 24)
+                }
             }
             .navigationTitle("Random Picker")
         }
@@ -132,7 +136,7 @@ struct DiceScreen: View {
                         .foregroundColor(.gray)
                 }
                 .padding()
-                .background(AppColors.darkSurface)
+                .background(AppColors.surface)
                 .cornerRadius(16)
                 .shadow(color: Color.black.opacity(0.3), radius: 5)
                 .transition(.asymmetric(insertion: .scale.combined(with: .opacity), removal: .opacity))

@@ -11,7 +11,7 @@ data class MainState(
     val isOnboardingCompleted: Boolean = false,
     val isAuthorized: Boolean = false,
     val isLoading: Boolean = true,
-    val isDarkTheme: Boolean = true
+    val isDarkTheme: Boolean = ThemeSettings.isDarkTheme()
 )
 
 sealed class MainIntent {

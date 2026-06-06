@@ -16,7 +16,7 @@ struct DetailsScreen: View {
     
     var body: some View {
         ZStack {
-            AppColors.darkBackground.edgesIgnoringSafeArea(.all)
+            AppColors.background.edgesIgnoringSafeArea(.all)
             
             if state.isLoading && state.movieDetails == nil {
                 ProgressView()
@@ -122,7 +122,7 @@ struct DetailsScreen: View {
                         }
                         
                         LinearGradient(
-                            gradient: Gradient(colors: [.clear, AppColors.darkBackground]),
+                            gradient: Gradient(colors: [.clear, AppColors.background]),
                             startPoint: .top,
                             endPoint: .bottom
                         )
@@ -189,10 +189,10 @@ struct DetailsScreen: View {
                             ForEach(details.genres, id: \.id) { genre in
                                 Text(genre.name)
                                     .font(AppTypography.labelSmall)
-                                    .foregroundColor(AppColors.darkTextPrimary)
+                                    .foregroundColor(AppColors.textPrimary)
                                     .padding(.horizontal, 12)
                                     .padding(.vertical, 6)
-                                    .background(AppColors.darkSurface)
+                                    .background(AppColors.surface)
                                     .cornerRadius(8)
                             }
                         }
@@ -204,11 +204,11 @@ struct DetailsScreen: View {
                         Text("Synopsis")
                             .font(AppTypography.headingLarge)
                             .fontWeight(.bold)
-                            .foregroundColor(AppColors.darkTextPrimary)
+                            .foregroundColor(AppColors.textPrimary)
                         
                         Text(details.overview)
                             .font(AppTypography.bodyMedium)
-                            .foregroundColor(AppColors.darkTextSecondary)
+                            .foregroundColor(AppColors.textSecondary)
                     }
                     .padding(.horizontal)
                     .padding(.vertical, 8)
@@ -319,7 +319,7 @@ struct DetailsScreen: View {
                 onClick: { viewModel.sendIntent(intent: DetailsIntent.ToggleWatchLater()) }
             )
             .padding()
-            .background(LinearGradient(gradient: Gradient(colors: [.clear, AppColors.darkBackground]), startPoint: .top, endPoint: .bottom))
+            .background(LinearGradient(gradient: Gradient(colors: [.clear, AppColors.background]), startPoint: .top, endPoint: .bottom))
         }
     }
     

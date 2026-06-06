@@ -10,7 +10,10 @@ struct SearchScreen: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
+            ZStack {
+                AppColors.background.edgesIgnoringSafeArea(.all)
+                
+                VStack(spacing: 0) {
                 
                 VStack(alignment: .leading, spacing: 10) {
                     CineVerseTextField(
@@ -75,7 +78,7 @@ struct SearchScreen: View {
                     }
                 }
                 .padding()
-                .background(AppColors.darkSurface)
+                .background(AppColors.surface)
 
                 if state.isSearching {
                     Spacer()
@@ -148,7 +151,7 @@ struct SearchScreen: View {
                                         Spacer()
                                     }
                                     .padding(8)
-                                    .background(AppColors.darkSurface)
+                                    .background(AppColors.surface)
                                     .cornerRadius(12)
                                     .shadow(color: Color.black.opacity(0.2), radius: 5)
                                 }
@@ -156,6 +159,7 @@ struct SearchScreen: View {
                         }
                         .padding()
                     }
+                }
                 }
             }
             .navigationTitle("Smart Search")

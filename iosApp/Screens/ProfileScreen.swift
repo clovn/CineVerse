@@ -11,7 +11,7 @@ struct ProfileScreen: View {
     var body: some View {
         NavigationView {
             ZStack {
-                AppColors.darkBackground.edgesIgnoringSafeArea(.all)
+                AppColors.background.edgesIgnoringSafeArea(.all)
                 ProfileDetailsLayout()
             }
             .navigationTitle("My Profile")
@@ -66,7 +66,7 @@ struct ProfileScreen: View {
                     }
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(AppColors.darkSurface)
+                    .background(AppColors.surface)
                     .cornerRadius(16)
 
                     VStack(alignment: .leading, spacing: 8) {
@@ -82,7 +82,7 @@ struct ProfileScreen: View {
                     }
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(AppColors.darkSurface)
+                    .background(AppColors.surface)
                     .cornerRadius(16)
                 }
                 .padding(.horizontal)
@@ -101,7 +101,7 @@ struct ProfileScreen: View {
                 .labelsHidden()
             }
             .padding()
-            .background(AppColors.darkSurface)
+            .background(AppColors.surface)
             .cornerRadius(16)
             .padding(.horizontal)
             
