@@ -68,7 +68,7 @@ fun AuthScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF0F172A)) 
+            .background(MaterialTheme.colorScheme.background) 
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -78,14 +78,14 @@ fun AuthScreen(
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape)
-                .background(Color(0xFFE11D48).copy(alpha = 0.1f)),
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.PlayArrow,
                 contentDescription = "Logo",
                 modifier = Modifier.size(44.dp),
-                tint = Color(0xFFE11D48)
+                tint = MaterialTheme.colorScheme.primary
             )
         }
 
@@ -94,25 +94,25 @@ fun AuthScreen(
         Text(
             text = "CineVerse",
             style = MaterialTheme.typography.headlineLarge,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold
         )
 
         Text(
             text = "Your Ultimate Movie Companion",
             style = MaterialTheme.typography.bodyMedium,
-            color = Color(0xFF94A3B8),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 4.dp, bottom = 32.dp)
         )
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF1E293B), RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
                 .padding(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            val activeColor = Color(0xFFE11D48)
+            val activeColor = MaterialTheme.colorScheme.primary
             val inactiveColor = Color.Transparent
 
             Box(
@@ -126,7 +126,7 @@ fun AuthScreen(
             ) {
                 Text(
                     text = "Log In",
-                    color = if (isLoginTab) Color.White else Color(0xFF94A3B8),
+                    color = if (isLoginTab) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -142,7 +142,7 @@ fun AuthScreen(
             ) {
                 Text(
                     text = "Register",
-                    color = if (!isLoginTab) Color.White else Color(0xFF94A3B8),
+                    color = if (!isLoginTab) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -159,7 +159,7 @@ fun AuthScreen(
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = "Username",
-                    tint = Color(0xFF64748B)
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         )
@@ -176,7 +176,7 @@ fun AuthScreen(
                 Icon(
                     imageVector = Icons.Default.Lock,
                     contentDescription = "Password",
-                    tint = Color(0xFF64748B)
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         )

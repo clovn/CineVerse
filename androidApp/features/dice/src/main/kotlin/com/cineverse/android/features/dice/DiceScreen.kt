@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -148,7 +149,7 @@ fun DiceScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(280.dp),
+                .height(260.dp),
             contentAlignment = Alignment.Center
         ) {
             androidx.compose.animation.AnimatedVisibility(
@@ -159,7 +160,7 @@ fun DiceScreen(
                 state.randomMovie?.let { movie ->
                     Card(
                         modifier = Modifier
-                            .fillMaxWidth(0.9f)
+                            .width(160.dp)
                             .clickable { onNavigateToDetails(movie.id) },
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(
@@ -180,7 +181,7 @@ fun DiceScreen(
                                 color = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-                            Box(modifier = Modifier.size(90.dp, 135.dp)) {
+                            Box(modifier = Modifier.size(100.dp, 150.dp)) {
                                 MovieCard(imageUrl = movie.posterPath, onClick = { onNavigateToDetails(movie.id) })
                             }
                             Spacer(modifier = Modifier.height(12.dp))
@@ -189,12 +190,16 @@ fun DiceScreen(
                                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.width(128.dp)
                             )
+                            Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = "Rating: ★ ${movie.voteAverage}",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.width(128.dp)
                             )
                         }
                     }
