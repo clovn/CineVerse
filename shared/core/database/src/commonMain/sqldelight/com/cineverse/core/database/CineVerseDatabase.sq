@@ -1,32 +1,34 @@
 CREATE TABLE WatchlistMovie (
-    id INTEGER NOT NULL PRIMARY KEY,
+    id INTEGER NOT NULL,
+    username TEXT NOT NULL,
     title TEXT NOT NULL,
     posterPath TEXT,
     releaseDate TEXT,
     voteAverage REAL NOT NULL,
     isFavorite INTEGER NOT NULL DEFAULT 0,
-    isWatchLater INTEGER NOT NULL DEFAULT 0
+    isWatchLater INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (id, username)
 );
 
 -- Watchlist Queries
 insertOrReplaceMovie:
-INSERT OR REPLACE INTO WatchlistMovie(id, title, posterPath, releaseDate, voteAverage, isFavorite, isWatchLater)
-VALUES (?, ?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO WatchlistMovie(id, username, title, posterPath, releaseDate, voteAverage, isFavorite, isWatchLater)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
 getMovieById:
-SELECT * FROM WatchlistMovie WHERE id = ?;
+SELECT * FROM WatchlistMovie WHERE id = ? AND username = ?;
 
 getFavoriteMovies:
-SELECT * FROM WatchlistMovie WHERE isFavorite = 1;
+SELECT * FROM WatchlistMovie WHERE isFavorite = 1 AND username = ?;
 
 getWatchLaterMovies:
-SELECT * FROM WatchlistMovie WHERE isWatchLater = 1;
+SELECT * FROM WatchlistMovie WHERE isWatchLater = 1 AND username = ?;
 
 removeMovie:
-DELETE FROM WatchlistMovie WHERE id = ?;
+DELETE FROM WatchlistMovie WHERE id = ? AND username = ?;
 
 deleteWatchlist:
-DELETE FROM WatchlistMovie;
+DELETE FROM WatchlistMovie WHERE username = ?;
 
 
 -- Simulated User Profile Table
