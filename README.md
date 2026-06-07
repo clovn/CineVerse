@@ -21,17 +21,6 @@
 * 🤖 **Android:** [androidScreenCast.mp4](demo/androidScreenCast.mp4)
 * 🍎 **iOS:** [iosScreencast.mov](demo/iosScreencast.mov)
 
-<details>
-  <summary>▶️ <b>Посмотреть Android Screencast</b></summary>
-  <br/>
-  <video src="demo/androidScreenCast.mp4" width="100%" controls></video>
-</details>
-
-<details>
-  <summary>▶️ <b>Посмотреть iOS Screencast</b></summary>
-  <br/>
-  <video src="demo/iosScreencast.mov" width="100%" controls></video>
-</details>
 
 ### 📊 Screenshots & Analytics
 
