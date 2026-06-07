@@ -32,3 +32,8 @@ xcuserdata/
 xcshareddata/
 !default.xcshareddata
 *.xcuserstate
+
+# Firebase configurations (contains API keys / secrets)
+google-services.json
+GoogleService-Info.plist
+
