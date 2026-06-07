@@ -114,38 +114,48 @@ class MovieRepositoryImpl(
         movies[Random.nextInt(movies.size)]
     }
 
+    private fun getCurrentUsername(): String {
+        return queries.getSession().executeAsOneOrNull()?.currentUsername ?: ""
+    }
+
     override fun getFavoriteMovies(): Flow<List<Movie>> {
-        return queries.getFavoriteMovies()
+        val username = getCurrentUsername()
+        return queries.getFavoriteMovies(username)
             .asFlow()
             .mapToList(Dispatchers.IO)
             .map { list -> list.map { it.toDomain() } }
     }
 
     override fun getWatchLaterMovies(): Flow<List<Movie>> {
-        return queries.getWatchLaterMovies()
+        val username = getCurrentUsername()
+        return queries.getWatchLaterMovies(username)
             .asFlow()
             .mapToList(Dispatchers.IO)
             .map { list -> list.map { it.toDomain() } }
     }
 
     override suspend fun isFavorite(movieId: Int): Boolean = withContext(Dispatchers.IO) {
-        queries.getMovieById(movieId.toLong()).executeAsOneOrNull()?.isFavorite == 1L
+        val username = getCurrentUsername()
+        queries.getMovieById(movieId.toLong(), username).executeAsOneOrNull()?.isFavorite == 1L
     }
 
     override suspend fun isWatchLater(movieId: Int): Boolean = withContext(Dispatchers.IO) {
-        queries.getMovieById(movieId.toLong()).executeAsOneOrNull()?.isWatchLater == 1L
+        val username = getCurrentUsername()
+        queries.getMovieById(movieId.toLong(), username).executeAsOneOrNull()?.isWatchLater == 1L
     }
 
     override suspend fun toggleFavorite(movie: Movie) = withContext(Dispatchers.IO) {
-        val existing = queries.getMovieById(movie.id.toLong()).executeAsOneOrNull()
+        val username = getCurrentUsername()
+        val existing = queries.getMovieById(movie.id.toLong(), username).executeAsOneOrNull()
         val isFavoriteNow = if (existing?.isFavorite == 1L) 0L else 1L
         val isWatchLaterVal = existing?.isWatchLater ?: 0L
         
         if (isFavoriteNow == 0L && isWatchLaterVal == 0L) {
-            queries.removeMovie(movie.id.toLong())
+            queries.removeMovie(movie.id.toLong(), username)
         } else {
             queries.insertOrReplaceMovie(
                 id = movie.id.toLong(),
+                username = username,
                 title = movie.title,
                 posterPath = movie.posterPath,
                 releaseDate = movie.releaseDate,
@@ -157,15 +167,17 @@ class MovieRepositoryImpl(
     }
 
     override suspend fun toggleWatchLater(movie: Movie) = withContext(Dispatchers.IO) {
-        val existing = queries.getMovieById(movie.id.toLong()).executeAsOneOrNull()
+        val username = getCurrentUsername()
+        val existing = queries.getMovieById(movie.id.toLong(), username).executeAsOneOrNull()
         val isWatchLaterNow = if (existing?.isWatchLater == 1L) 0L else 1L
         val isFavoriteVal = existing?.isFavorite ?: 0L
         
         if (isWatchLaterNow == 0L && isFavoriteVal == 0L) {
-            queries.removeMovie(movie.id.toLong())
+            queries.removeMovie(movie.id.toLong(), username)
         } else {
             queries.insertOrReplaceMovie(
                 id = movie.id.toLong(),
+                username = username,
                 title = movie.title,
                 posterPath = movie.posterPath,
                 releaseDate = movie.releaseDate,
@@ -177,7 +189,8 @@ class MovieRepositoryImpl(
     }
 
     override suspend fun removeMovie(movieId: Int) = withContext(Dispatchers.IO) {
-        queries.removeMovie(movieId.toLong())
+        val username = getCurrentUsername()
+        queries.removeMovie(movieId.toLong(), username)
     }
 
     override suspend fun getMovieNote(movieId: Int, username: String): String? = withContext(Dispatchers.IO) {
